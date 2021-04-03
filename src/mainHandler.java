@@ -3,10 +3,17 @@ import java.io.*;
 
 public class mainHandler
 {
-
+	public void showSystemDate()
+	{
+		//
+		//
+		//
+		//......
+	}
+	
 	// This method is responsible for displaying text interface, 
 	// receiving user choices and returning user choices
-	public int InterfaceHandler() throws IOException
+	public int mainInterfaceHandler() throws IOException
 	{		
 		String OutputString = "";
 		OutputString += "The System Date is now: 0000-00-00\n";
@@ -35,30 +42,39 @@ public class mainHandler
 				return choice;
 			}
 			else
-				System.out.println("Invalid INPUT!");
+				System.out.println("INVALID INPUT!");
 		}
 	}
 	
+	// THE MAIN FUNCTION
 	public static void main(String[] args) throws IOException
 	{
 		mainHandler myHandler = new mainHandler();
 	
 		while (true)
 		{
-	    int choice = myHandler.InterfaceHandler();
-	    System.out.printf("Your choice is %d\n", choice);
+			int choice = myHandler.mainInterfaceHandler();
+			System.out.printf("Your choice is %d\n\n", choice);
+		
+			if (choice == 5) break;	 //quit the system
+		
+			// System interface
+			if (choice == 1) system.system_main();
+			
+			// Customer interface
+			if (choice == 2) Customer.customer_main();
+			
+			// Bookstore interface
+			if (choice == 3) Bookstore.bookstore_main();			
+			
+			//Display system date
+			if (choice == 4)
+			{
+				
+			}
+			
 		}
-	/*
-	while (true)
-	{
-		
-		
-		
-	}
-	*/	
-		
 	}	
-	
 }
 
 
