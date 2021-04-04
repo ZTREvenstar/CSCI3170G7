@@ -42,7 +42,7 @@ public class mainHandler
 				return choice;
 			}
 			else
-				System.out.println("INVALID INPUT!");
+				System.out.println("INVALID INPUT!\n");
 		}
 	}
 	
