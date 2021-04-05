@@ -59,7 +59,7 @@ public class system {
 			System.out.println(e);
 			System.exit(0);
 		}	
-		System.out.print("Database connection SUCCESS!!!!");
+		System.out.print("Database connection SUCCESS!!!!\n");
 		system mySystemObj = new system();
 		while (true)
 		{
@@ -68,17 +68,43 @@ public class system {
 		
 			if (choice == 5) break;	 //back to the main page
 		
+			
+			
+			
+			
 			// Create Table
 			if (choice == 1) 
 			{
 				
 				PreparedStatement pstmt = null;
 
+				String psql = "Create table book("
+				      + "ISBN CHAR(13),"
+				      + "title CHAR(100),"
+				      + "unit_price INTEGER,"
+				      + "no_of_copies INTEGER,"
+				      + "PRIMARY KEY (ISBN)";
+				int updatestatus = 10000000;
+				try {
+					pstmt = con.prepareStatement(psql);
+					updatestatus = pstmt.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					System.out.println("AN SQL EXCEPTION OCCURS!");
+					e.printStackTrace();
+				}
+
+				
+				System.out.printf("updatestatus = %d\n", updatestatus);
+				
+				/*
 				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN))"
 				+ "				Create table customer(customer_id CHAR(10),name CHAR(50),shipping_address CHAR(200),credit_card_no CHAR(19),PRIMARY KEY (customer_id))"
 				+ "				Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer)"
 				+ "				Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders,FOREIGN KEY (ISBN) REFERENCES book)"
 				+ "				Create table book_author(ISBN CHAR(13),author_name CHAR(50),PRIMARY KEY (ISBN,author_name),FOREIGN KEY (ISBN) REFERENCES book)";
+				*/
+				/*
 				try {
 					pstmt = con.prepareStatement(psql);
 				} catch (SQLException e) {
@@ -91,7 +117,7 @@ public class system {
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				
 				
 			}
