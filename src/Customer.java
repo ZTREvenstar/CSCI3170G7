@@ -250,6 +250,69 @@ public class Customer {
 			
 		}
 	}
+
+	public int alterOrder(Connection conObj) throws IOException, SQLException
+	{
+		int status = 0;
+		
+		
+		
+		
+		
+		
+		
+		
+		return status;
+	}
+	
+	public int queryOrder(Connection conObj) throws IOException, SQLException
+	{
+		int status = 0;
+		
+		//Prepare the reader which reads user inputs from the console
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));		
+				
+		System.out.print("Please enter your customerID:");
+		String customerID = reader.readLine();
+		
+		System.out.print("Please input the year:");
+		String year = reader.readLine();
+		
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;
+		
+
+		String psql = "SELECT *"
+			    	+ "FROM orders O"
+			    	+ "WHERE O.customer_id = ? AND O.o_date = ?-__-__";
+	
+		pstmt = conObj.prepareStatement(psql);
+		pstmt.setString(1, customerID);
+		pstmt.setString(2, year);
+	
+		rs = pstmt.executeQuery();
+	
+		// output the result
+		int counter = 0;
+		while(rs.next())
+		{
+			counter++;
+			System.out.printf("\nRecord: %d\n", counter);
+			String order_id = rs.getString("order_id");
+			String o_date = rs.getString("o_date");
+			int charge = rs.getInt("charge");
+			String shipping_status = rs.getString("shipping_status");
+			System.out.println("OrderID: " + order_id);
+			System.out.println("OrderDate: " + o_date);
+			System.out.printf("charge: %d\n", charge);
+			System.out.println("shipping status: " + shipping_status);
+		}			
+		status = 1;
+		
+		return status;
+	}
+	
+	
 	public static void customer_main() throws IOException
 	{
 		// Database driver issues
@@ -313,13 +376,31 @@ public class Customer {
 			// Order Altering
 			if (choice == 3) 
 			{
-							
+				int status = 0;
+				try 
+				{
+					status = myCustomerObj.alterOrder(con);
+				} catch (IOException | SQLException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.printf("You have finished altering order!    Status: %d\n\n", status);			
 			}
 			
 			// Order Query
 			if (choice == 4)
 			{
-				
+				int status = 0;
+				try 
+				{
+					status = myCustomerObj.queryOrder(con);
+				} catch (IOException | SQLException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.printf("You have finished Order Query!    Status: %d\n\n", status);
 			}
 			
 		}
