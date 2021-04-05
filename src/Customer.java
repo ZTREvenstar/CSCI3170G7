@@ -40,6 +40,7 @@ public class Customer {
 		}
 	}
 	
+	
 	public int performBookSearch(Connection conObj) throws IOException, SQLException
 	{
 		int status = 0;
@@ -80,7 +81,7 @@ public class Customer {
 			PreparedStatement pstmt = null;
 			
 			// search ISBN
-			// 还要写query author!!!!!!!!!!!!!!!!!!
+			// need to write query author!!!!!!!!!!!!!!!!!!
 			if (choice == 1)
 			{
 				System.out.println("You choose to search ISBN.\n"
@@ -96,7 +97,7 @@ public class Customer {
 			}
 			
 			// search book title
-			// 还要写query author!!!!!!!!!!!!!!!!!!
+			// need to write query author!!!!!!!!!!!!!!!!!!
 			else if (choice == 2)
 			{
 				System.out.println("You choose to search book title.\n"
@@ -112,7 +113,7 @@ public class Customer {
 			}
 			
 			// search author name
-			// 还要写query author!!!!!!!!!!!!!!!!!!
+			// need to write query author!!!!!!!!!!!!!!!!!!
 			else if (choice == 3)
 			{
 				System.out.println("You choose to search author name.\n"
@@ -145,6 +146,7 @@ public class Customer {
 		}		
 	}
 
+	
 	public int createOrder(Connection conObj) throws IOException, SQLException
 	{
 		int status = 0;
@@ -157,7 +159,7 @@ public class Customer {
 		String customerID = reader.readLine();
 		//
 		//
-		//给这个建一个 order的tuple
+		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! order tuple
 		//
 		//
 		
@@ -232,7 +234,7 @@ public class Customer {
 						pstmt.setInt(2, book_quantity);
 						int updateStatus1 = pstmt.executeUpdate();
 						// update records in table "orders"
-						// 目前暂时写死
+						// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 						psql = "UPDATE orders O" 
 						     + "SET O.o_date = 19840000, O.charge = O.charge + 114514"
 							 + "WHERE 0.order_id = 0";
@@ -245,12 +247,13 @@ public class Customer {
 				status = 2;
 				
 				
-				//最后检查 如果 order是空的则删掉
+				//final check    if the table is empty then perform delete
 			}
 			
 		}
 	}
 
+	
 	public int alterOrder(Connection conObj) throws IOException, SQLException
 	{
 		int status = 0;
@@ -264,6 +267,7 @@ public class Customer {
 		
 		return status;
 	}
+	
 	
 	public int queryOrder(Connection conObj) throws IOException, SQLException
 	{
@@ -298,10 +302,12 @@ public class Customer {
 		{
 			counter++;
 			System.out.printf("\nRecord: %d\n", counter);
+			
 			String order_id = rs.getString("order_id");
 			String o_date = rs.getString("o_date");
 			int charge = rs.getInt("charge");
 			String shipping_status = rs.getString("shipping_status");
+			
 			System.out.println("OrderID: " + order_id);
 			System.out.println("OrderDate: " + o_date);
 			System.out.printf("charge: %d\n", charge);
@@ -408,3 +414,13 @@ public class Customer {
 	}
 		
 }
+
+
+
+
+
+
+
+
+
+
