@@ -1,7 +1,12 @@
 import java.util.*;
 import java.io.*;
+import java.sql.*;
 
 public class Customer {
+	
+	public static String dbAddress = "jdbc:mysql://projgw.cse.cuhk.edu.hk:2633/db7";
+	public static String dbUsername = "Group7";
+	public static String dbPassword = "Group7";
 	
 	public int customerInterfaceHandler() throws IOException
 	{
@@ -35,7 +40,7 @@ public class Customer {
 		}
 	}
 	
-	public int performBookSearch() throws IOException
+	public int performBookSearch(Connection conObj) throws IOException, SQLException
 	{
 		int status = 0;
 		
@@ -67,42 +72,206 @@ public class Customer {
 				else
 					System.out.println("INVALID INPUT!");
 			}
+			
 			// exit
-			if (choice == 4) 	
-			{
-				status = 4;
-				return status;	
-			}
+			if (choice == 4)  return status;	
+			
+			ResultSet rs = null;
+			PreparedStatement pstmt = null;
+			
 			// search ISBN
-			else if (choice == 1)
+			// 还要写query author!!!!!!!!!!!!!!!!!!
+			if (choice == 1)
 			{
 				System.out.println("You choose to search ISBN.\n"
 						         + "Input the ISBN:\n");
-				String input = reader.readLine();
+				String inputISBN = reader.readLine();
 				
-				SELECT *
-				FROM book B
-				WHERE B.ISBN="given"
+				String psql = "SELECT * FROM book B WHERE B.ISBN = ?";
+
+				pstmt = conObj.prepareStatement(psql);
+				pstmt.setString(1, inputISBN);			
 				
-				
+				status = 1;
 			}
+			
 			// search book title
+			// 还要写query author!!!!!!!!!!!!!!!!!!
 			else if (choice == 2)
 			{
 				System.out.println("You choose to search book title.\n"
 						         + "Input the book title:\n");
+				String inputBooktitle = reader.readLine();
+				
+				String psql = "SELECT * FROM book B WHERE B.title = ?";
+				
+				pstmt = conObj.prepareStatement(psql);
+				pstmt.setString(1, inputBooktitle);
+				
+				status = 2;
 			}
+			
 			// search author name
+			// 还要写query author!!!!!!!!!!!!!!!!!!
 			else if (choice == 3)
 			{
 				System.out.println("You choose to search author name.\n"
 							     + "Input the author name:\n");
+				
+				//
+				System.out.println("NOT REALIZED YET.\n");
+				status = 3;
+				continue;
 			}
+			
+			rs = pstmt.executeQuery();
+			
+			// output the result
+			int counter = 0;
+			while(rs.next())
+			{
+				counter++;
+				String ISBN = rs.getString("ISBN");
+				String title = rs.getString("title");
+				int unit_price = rs.getInt("unit_price");
+				int no_of_copies = rs.getInt("no_of_copies");
+				System.out.printf("======= %d-th record:\n", counter);
+				System.out.println("      ISBN: " + ISBN + "   "
+						         + "Book title: " + title + "   "
+						         + "Unit price: " + unit_price + "   "
+						         + "No_of_copies: " + no_of_copies + "   ");
+			}
+			if (counter == 0) System.out.println("No records found.");
 		}		
 	}
-	
+
+	public int createOrder(Connection conObj) throws IOException, SQLException
+	{
+		int status = 0;
+		
+		//Prepare the reader which reads user inputs from the console
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));		
+		
+		System.out.println("Please enter your customerID??");
+		
+		String customerID = reader.readLine();
+		//
+		//
+		//给这个建一个 order的tuple
+		//
+		//
+		
+		System.out.println("What books do you want to order??");
+		System.out.println("Input ISBN and then the quantity.");
+		System.out.println("You can press \"L\" to see ordered list, or \"F\" to finish ordering.");
+
+		while(true)
+		{
+			String book_ISBN = null;
+			int book_quantity = 0;
+			
+			System.out.print("Please enter the book's ISBN:");
+			
+			book_ISBN = reader.readLine();
+			
+			if (book_ISBN.equals("F"))	return status;
+			
+			ResultSet rs = null;
+			PreparedStatement pstmt = null;
+			
+			if (book_ISBN.equals("L"))
+			{
+				// see ordered list
+				String psql = "SELECT OL.ISBN, OL.quantity "
+						    + "FROM orders O, ordering OL "
+						    + "WHERE O.customer_id = ? AND O.order_id = OL.order_id";
+				
+				pstmt = conObj.prepareStatement(psql);
+				pstmt.setString(1, customerID);
+				
+				rs = pstmt.executeQuery();
+				
+				// output the result
+				System.out.println("ISBN		 NUMBER:\n");
+				while(rs.next())
+				{
+					String ISBN = rs.getString("ISBN");
+					String title = rs.getString("quantity");
+					System.out.println(ISBN + "    " + title);
+				}			
+				status = 1;
+			}
+			else
+			{	
+				// check if the ISBN input exists
+				//String psql = "";
+				
+				System.out.printf("Please enter the quantity of the order");
+				while (true)
+				{
+					book_quantity = reader.read();
+				
+					// check if the quantity are available
+					String psql = "SELECT B.no_of_copies"
+						    	+ "FROM book B"
+						    	+ "WHERE B.ISBN = ?";
+					pstmt = conObj.prepareStatement(psql);
+					pstmt.setString(1, book_ISBN);
+					rs = pstmt.executeQuery();
+					int no_of_copies_available = rs.getInt("no_of_copies");
+				
+					if (no_of_copies_available < book_quantity)
+						System.out.printf("Quantity requested exceeds the maximum number available!\n"
+										+ "Please input a number <= %d.\n", no_of_copies_available);
+					else
+					{
+						// insert records into table "ordering"
+						psql = "INSERT INTO ordering VALUES (0, ?, ?)";
+						pstmt = conObj.prepareStatement(psql);
+						pstmt.setString(1, book_ISBN);
+						pstmt.setInt(2, book_quantity);
+						int updateStatus1 = pstmt.executeUpdate();
+						// update records in table "orders"
+						// 目前暂时写死
+						psql = "UPDATE orders O" 
+						     + "SET O.o_date = 19840000, O.charge = O.charge + 114514"
+							 + "WHERE 0.order_id = 0";
+						int updateStatus2 = pstmt.executeUpdate();
+						
+						System.out.printf("updateStatus1: %d      updateStatus2: %d\n", updateStatus1, updateStatus2);
+						break;
+					}
+				}
+				status = 2;
+				
+				
+				//最后检查 如果 order是空的则删掉
+			}
+			
+		}
+	}
 	public static void customer_main() throws IOException
 	{
+		// Database driver issues
+		Connection con = null;
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(dbAddress, dbUsername, dbPassword);
+		}
+		catch (ClassNotFoundException e)
+		{
+			System.out.println("JAVA MYSQL DB Driver not found!");
+			System.exit(0);
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e);
+			System.exit(0);
+		}	
+		System.out.print("Database connection SUCCESS!!!!");
+		
+		
 		Customer myCustomerObj = new Customer();
 		while (true)
 		{
@@ -114,14 +283,31 @@ public class Customer {
 			// Book Search
 			if (choice == 1) 
 			{
-				int status = myCustomerObj.performBookSearch();
+				int status = 0;
+				try 
+				{
+					status = myCustomerObj.performBookSearch(con);
+				} catch (IOException | SQLException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.out.printf("You have finished Book Search!    Status: %d\n\n", status);
 			}
 			
 			// Order Creation 
 			if (choice == 2) 
 			{
-				
+				int status = 0;
+				try 
+				{
+					status = myCustomerObj.createOrder(con);
+				} catch (IOException | SQLException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.printf("You have finished Order Creation!    Status: %d\n\n", status);
 			}	
 			
 			// Order Altering
