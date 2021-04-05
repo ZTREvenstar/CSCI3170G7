@@ -78,12 +78,7 @@ public class system {
 				
 				PreparedStatement pstmt = null;
 
-				String psql = "Create table book("
-				      + "ISBN CHAR(13),"
-				      + "title CHAR(100),"
-				      + "unit_price INTEGER,"
-				      + "no_of_copies INTEGER,"
-				      + "PRIMARY KEY (ISBN)";
+				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN))";
 				int updatestatus = 10000000;
 				try {
 					pstmt = con.prepareStatement(psql);
