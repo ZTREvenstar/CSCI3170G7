@@ -37,29 +37,59 @@ public class Bookstore {
 	public static void bookstore_main() throws IOException
 	{
 		Bookstore myBookstoreObj = new Bookstore();
+		
+		String orderid = null;
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		
 		while (true)
 		{
 			int choice = myBookstoreObj.bookstoreInterfaceHandler();
-			System.out.printf("Your choice is %d\n\n", choice);
 			
 			if (choice == 4) break;	 //back to the main page
 		
 			// Order Update
 			if (choice == 1) 
 			{
+				System.out.printf("Please input the order ID:");
+				orderid = reader.readLine();
+				//***SQL Query
 				
+				//if satus is N and >=1 books is ordered
+				System.out.printf("the Shipping status of %s is      and      books ordered\n", orderid);
+				System.out.printf("Are you sure to update the shipping status? (Yes=Y)");
+				String updateornot=reader.readLine();
+				if (updateornot.equals("Y")) {
+					//***SQL update
+					
+					
+					System.out.printf("Updated shipping status\n\n");
+				}
+				else{ 
+					System.out.printf("Update is cancelled.\n\n");
+				}
+				//if satus is not N and >=1 books is ordered
+				//System.out.printf("Sorry, you cannot update the order because the shipping status is not N or less than 1 book is ordered.");
 			}
 			
 			// Order Query
 			if (choice == 2) 
 			{
+				System.out.printf("Please input the Month for Order Query (e.g.2021-04):");
+				String monthofquery=reader.readLine();
+				//***SQL Query
+				
 				
 			}	
 			
 			// N most Popular Book Query
 			if (choice == 3) 
 			{
-							
+				System.out.printf("Please input the N popular books number:");
+				String noofpopular=reader.readLine();
+				//***SQL Query
+				
+				
+				
 			}
 			
 		}
