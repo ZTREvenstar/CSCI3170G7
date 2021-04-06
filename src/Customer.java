@@ -170,6 +170,7 @@ public class Customer {
 	public int createOrder(Connection conObj) throws IOException, SQLException
 	{
 		int status = 0;
+		boolean firstOrder = true;
 		
 		//Prepare the reader which reads user inputs from the console
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));		
@@ -177,11 +178,6 @@ public class Customer {
 		System.out.println("Please enter your customerID??");
 		
 		String customerID = reader.readLine();
-		//
-		//
-		?????????????//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! order tuple
-		//
-		//
 		
 		System.out.println("What books do you want to order??");
 		System.out.println("Input ISBN and then the quantity.");
@@ -234,35 +230,54 @@ public class Customer {
 					book_quantity = reader.read();
 				
 					// check if the quantity are available
-					String psql = "SELECT B.no_of_copies"
+					String psql = "SELECT B.no_of_copies, B.unit_price"
 						    	+ "FROM book B"
 						    	+ "WHERE B.ISBN = ?";
 					pstmt = conObj.prepareStatement(psql);
 					pstmt.setString(1, book_ISBN);
 					rs = pstmt.executeQuery();
 					int no_of_copies_available = rs.getInt("no_of_copies");
-				
+					int book_unit_price = rs.getInt("book_unit_price");
+					
+					// quantity ordered not available
 					if (no_of_copies_available < book_quantity)
 						System.out.printf("Quantity requested exceeds the maximum number available!\n"
 										+ "Please input a number <= %d.\n", no_of_copies_available);
 					else
-					{
+					{ 
+						// if it's the first order, perform insert on "orders", else perform update
+						if (firstOrder)
+						{
+							firstOrder = false;
+							psql = "INSERT INTO orders VALUES ('000000000', '2222-22-22', 'N', ?, ?)";
+							pstmt = conObj.prepareStatement(psql);
+							pstmt.setInt(1, book_quantity * book_unit_price);
+							pstmt.setString(2, customerID);
+						}
+						else
+						{
+							psql = "UPDATE orders O"
+								 + " SET O.o_date = '1984-00-00', O.charge = O.charge + ?"
+								 + " WHERE O.order_id = '000000000'";
+							pstmt = conObj.prepareStatement(psql);
+							pstmt.setInt(1, book_quantity * book_unit_price);
+						}
+						int updateStatus1 = pstmt.executeUpdate();					
+						
 						// insert records into table "ordering"
-						psql = "INSERT INTO ordering VALUES (0, ?, ?)";
+						psql = "INSERT INTO ordering VALUES ('0', ?, ?)";
 						pstmt = conObj.prepareStatement(psql);
 						pstmt.setString(1, book_ISBN);
 						pstmt.setInt(2, book_quantity);
-						int updateStatus1 = pstmt.executeUpdate();
+						int updateStatus2 = pstmt.executeUpdate();
 						// update records in table "orders"
+						// update numof copies available
 						// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 						//
 						//
 						//
 						//
-						psql = "UPDATE orders O" 
-						     + "SET O.o_date = 19840000, O.charge = O.charge + 114514"
-							 + "WHERE 0.order_id = 0";
-						int updateStatus2 = pstmt.executeUpdate();
+						
 						
 						System.out.printf("updateStatus1: %d      updateStatus2: %d\n", updateStatus1, updateStatus2);
 						break;
