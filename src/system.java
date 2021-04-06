@@ -82,8 +82,7 @@ public class system {
 						       + " title CHAR(100),"
 						       + " unit_price INTEGER,"
 						       + " no_of_copies INTEGER,"
-						       + " PRIMARY KEY (ISBN),"
-						       + " FOREIGN KEY (author_name) REFERENCES book_author ON DELETE NO ACTION)";
+						       + " PRIMARY KEY (ISBN))";
 				
 				try {
 					pstmt = con.prepareStatement(psql);
