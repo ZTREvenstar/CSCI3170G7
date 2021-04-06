@@ -81,7 +81,6 @@ public class Customer {
 			PreparedStatement pstmt = null;
 			
 			// search ISBN
-			// need to write query author!!!!!!!!!!!!!!!!!!
 			if (choice == 1)
 			{
 				System.out.println("You choose to search ISBN.\n"
@@ -97,39 +96,43 @@ public class Customer {
 			}
 			
 			// search book title
-			// need to write query author!!!!!!!!!!!!!!!!!!
 			else if (choice == 2)
 			{
 				System.out.println("You choose to search book title.\n"
 						         + "Input the book title:\n");
 				String inputBooktitle = reader.readLine();
 				
-				String psql = "SELECT * FROM book B WHERE B.title = ?";
+				String psql = "SELECT * FROM book B WHERE B.title LIKE ?";
 				
 				pstmt = conObj.prepareStatement(psql);
-				pstmt.setString(1, inputBooktitle);
+				pstmt.setString(1, "%"+inputBooktitle+"%");
 				
 				status = 2;
 			}
 			
 			// search author name
-			// need to write query author!!!!!!!!!!!!!!!!!!
 			else if (choice == 3)
 			{
 				System.out.println("You choose to search author name.\n"
 							     + "Input the author name:\n");
+				String inputAuthorName = reader.readLine();
 				
-				//
-				System.out.println("NOT REALIZED YET.\n");
+				String psql = "SELECT B.ISBN, B.title, B.unit_price, B.no_of_copies"
+						    + "FROM book B, book_author BA"
+						    + "WHERE B.ISBN = BA.ISBN AND BA.author_name LIKE ?";
+				
+				pstmt = conObj.prepareStatement(psql);
+				pstmt.setString(1, "%"+inputAuthorName+"%");
+
 				status = 3;
-				continue;
 			}
 			
 			rs = pstmt.executeQuery();
 			
 			// output the result
+			// outputting a list of authors is realized here
 			int counter = 0;
-			while(rs.next())
+			while (rs.next())
 			{
 				counter++;
 				String ISBN = rs.getString("ISBN");
@@ -140,7 +143,24 @@ public class Customer {
 				System.out.println("      ISBN: " + ISBN + "   "
 						         + "Book title: " + title + "   "
 						         + "Unit price: " + unit_price + "   "
-						         + "No_of_copies: " + no_of_copies + "   ");
+						         + "No of available: " + no_of_copies + "   ");
+				
+				// output a list of authors
+				ResultSet rs2 = null;
+				PreparedStatement pstmt2 = null;			
+				String psql2 = "SELECT author_name FROM book_author BA WHERE BA.ISBN = ?";
+				pstmt2 = conObj.prepareStatement(psql2);
+				pstmt2.setString(1, ISBN);
+				rs2 = pstmt2.executeQuery();
+				
+				System.out.println("Authors:");
+				int innerCounter = 0;
+				while (rs2.next())
+				{
+					innerCounter++;
+					System.out.printf("%d: %s\n", innerCounter, rs2.getString("author_name"));
+				}
+				System.out.println("");
 			}
 			if (counter == 0) System.out.println("No records found.");
 		}		
@@ -159,7 +179,7 @@ public class Customer {
 		String customerID = reader.readLine();
 		//
 		//
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! order tuple
+		?????????????//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! order tuple
 		//
 		//
 		
@@ -235,6 +255,10 @@ public class Customer {
 						int updateStatus1 = pstmt.executeUpdate();
 						// update records in table "orders"
 						// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						//
+						//
+						//
+						//
 						psql = "UPDATE orders O" 
 						     + "SET O.o_date = 19840000, O.charge = O.charge + 114514"
 							 + "WHERE 0.order_id = 0";
@@ -258,13 +282,186 @@ public class Customer {
 	{
 		int status = 0;
 		
+		//Prepare the reader which reads user inputs from the console
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));		
+				
+		System.out.println("Please enter the OrderID that you want to change:");
+		
+		String orderID = reader.readLine();
+		
+		ResultSet rs = null;
+		PreparedStatement pstmt = null;	
 		
 		
+		// display order info
+		String psql = "SELECT *"
+			    + "FROM orders O"
+			    + "WHERE O.order_id = ?";
+		pstmt = conObj.prepareStatement(psql);
+		pstmt.setString(1, orderID);		
+		rs = pstmt.executeQuery();
+		
+		String order_id = rs.getString("order_id");
+		int charge = rs.getInt("charge");
+		String shipping_status = rs.getString("shipping_status");
+		String customerID = rs.getString("customer_id");
+		
+		System.out.print("OrderID: " + order_id + "   ");
+		System.out.print("customerID: " + customerID + "   ");
+		System.out.printf("charge: %d    ", charge);
+		System.out.println("shipping status: " + shipping_status + "\n");
+				
+		
+		// display the book list
+		psql = "SELECT OL.ISBN, OL.quantity"
+			 + "FROM orders OL"
+			 + "WHERE OL.order_id = ?";
+		pstmt = conObj.prepareStatement(psql);
+		pstmt.setString(1, orderID);
+		rs = pstmt.executeQuery();
+		
+		int counter = 0;
+		ArrayList<String> bookList = new ArrayList<String>();
+		ArrayList<Integer> bookQuantity = new ArrayList<Integer>();
+		while(rs.next())
+		{
+			counter++;
+			bookList.add(rs.getString("ISBN"));
+			bookQuantity.add(rs.getInt("quantity"));
+			
+			System.out.printf("book_no: %d   ", counter);
+			System.out.printf("ISBN = %S   ", bookList.get(counter - 1));
+			System.out.printf("quantity = %S   \n", bookQuantity.get(counter - 1));			
+		}
 		
 		
+		// check the shipping status, if = "Y", return directly.
+		if (shipping_status.equals("Y")) {
+				System.out.println("Altering request fails. The order has been shipped.");
+				return 0;
+		}
 		
+		// shipping status = "N", continue.
+		System.out.println("Which book you want to alter (input book no.):");
+		int bookNum = reader.read();
 		
+		String addOrRemove = null;
+		while(true)
+		{
+			System.out.println("input add or remove:");
+			addOrRemove = reader.readLine();
+			if (addOrRemove.equals("add") || addOrRemove.equals("remove"))
+				break;
+			System.out.println("Invalid choice!");
+		}
 		
+		while (true)
+		{
+			System.out.println("input the number:");
+			int alterNum = reader.read();	
+					
+			psql = "SELECT B.no_of_copies, B.unit_price"
+				 + "FROM book B"
+				 + "WHERE B.ISBN = ?";
+			pstmt = conObj.prepareStatement(psql);
+			pstmt.setString(1, bookList.get(bookNum - 1));
+			rs = pstmt.executeQuery();
+			
+			int no_of_copies_available = 0;
+			int unit_price = 0;
+			
+			while (rs.next()) {	
+				no_of_copies_available = rs.getInt("no_of_copies_available");
+				unit_price = rs.getInt("unit_price");
+			}
+			
+			// check whether the quantity altering is valid		
+			// quantity added invalid
+			if (addOrRemove.equals("add") && no_of_copies_available < alterNum)
+			{
+				System.out.printf("quantity requested exceeds the max quantity available %d !\n", no_of_copies_available);
+				continue;
+			}
+			// quantity removed invalid
+			else if (addOrRemove.equals("remove") && (alterNum < 0 || alterNum > bookQuantity.get(bookNum - 1)) )
+			{
+				System.out.println("the removing quantity is invalid!");
+				continue;
+			}
+				
+			// The quantity is valid, continue.
+			System.out.println("The update is OK!");	
+					
+			// update the quantity
+			int updated_quantity = 0; 
+			if (addOrRemove.equals("add")) {
+				updated_quantity = bookQuantity.get(bookNum - 1) + alterNum;
+				no_of_copies_available -= alterNum;
+			}
+			if (addOrRemove.equals("remove")) {
+				updated_quantity = bookQuantity.get(bookNum - 1) - alterNum;
+				no_of_copies_available += alterNum;
+			}
+			bookQuantity.set(bookNum - 1, updated_quantity);
+			
+			// perform updating table ¡°book¡±, ¡°ordering¡± and ¡°orders¡±
+			psql = "UPDATE book B" 
+				 + "SET B.no_of_copies = ?"
+				 + "WHERE B.ISBN = ?";
+			pstmt.setInt(1, no_of_copies_available);
+			pstmt.setString(2, bookList.get(bookNum - 1));
+			pstmt.executeUpdate(); 
+			
+			psql = "UPDATE ordering OL" 
+				 + "SET OL.quantity = ?"
+				 + "WHERE OL.order_id = ? AND OL.ISBN = ?";
+			pstmt.setInt(1, updated_quantity);
+			pstmt.setString(2, orderID);
+			pstmt.setString(3, bookList.get(bookNum - 1));
+			pstmt.executeUpdate(); 
+					
+			psql = "UPDATE orders O" 
+				 + "SET O.charge = O.charge ? ?"
+				 + "WHERE O.order_id = ?";
+			if (addOrRemove.equals("add"))
+				pstmt.setString(1, "+");
+			if (addOrRemove.equals("remove"))
+				pstmt.setString(1, "-");
+			pstmt.setInt(2, alterNum * unit_price);
+			pstmt.setString(3, orderID);
+			pstmt.executeUpdate(); 
+			
+			System.out.println("The update is done!");
+			
+			// perform update order date
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			//
+			
+			// print order info and book list again
+			System.out.print("OrderID: " + order_id + "   ");
+			System.out.print("customerID: " + customerID + "   ");
+			System.out.printf("charge: %d    ", charge);
+			System.out.println("shipping status: " + shipping_status + "\n");
+			for (int i = 0; i < bookList.size(); i++) {
+				System.out.printf("book_no: %d   ", i + 1);
+				System.out.printf("ISBN = %S   ", bookList.get(i));
+				System.out.printf("quantity = %S   \n", bookQuantity.get(i));		
+	        }
+			
+			break;
+		}			
 		return status;
 	}
 	
@@ -283,16 +480,15 @@ public class Customer {
 		String year = reader.readLine();
 		
 		ResultSet rs = null;
-		PreparedStatement pstmt = null;
-		
+		PreparedStatement pstmt = null;	
 
 		String psql = "SELECT *"
 			    	+ "FROM orders O"
-			    	+ "WHERE O.customer_id = ? AND O.o_date = ?-__-__";
+			    	+ "WHERE O.customer_id = ? AND O.o_date LIKE ?";
 	
 		pstmt = conObj.prepareStatement(psql);
 		pstmt.setString(1, customerID);
-		pstmt.setString(2, year);
+		pstmt.setString(2, year+"-__-__");
 	
 		rs = pstmt.executeQuery();
 	
