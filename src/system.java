@@ -41,7 +41,7 @@ public class system {
 		}
 	}
 	
-	public static void system_main() throws IOException
+	public static String system_main() throws IOException
 	{
 		Connection con = null;
 		try 
@@ -74,7 +74,7 @@ public class system {
 				
 				PreparedStatement pstmt = null;
 
-				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN))"
+				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN),FOREIGN KEY (author_name) REFERENCES book_author ON DELETE NO ACTION)"
 				+ "				Create table customer(customer_id CHAR(10),name CHAR(50),shipping_address CHAR(200),credit_card_no CHAR(19),PRIMARY KEY (customer_id))"
 				+ "				Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer)"
 				+ "				Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders,FOREIGN KEY (ISBN) REFERENCES book)"
@@ -99,29 +99,74 @@ public class system {
 			// Delete Table
 			if (choice == 2) 
 			{
-				
+				PreparedStatement pstmt = null;
+
+				String psql = "DROP TABLE IF EXISTS book;"
+						+ "DROP TABLE IF EXISTS customer;"
+						+ "DROP TABLE IF EXISTS orders;"
+						+ "DROP TABLE IF EXISTS ordering;"
+						+ "DROP TABLE IF EXISTS book_author;";
+				try {
+					pstmt = con.prepareStatement(psql);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				try {
+					int updatestatus = pstmt.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}	
 			
 			// Insert Data
 			if (choice == 3) 
 			{
-				String filePath = "data.txt";
 
-				FileInputStream fin = new FileInputStream(filePath);
-
-				InputStreamReader reader = new InputStreamReader(fin);
-
-				BufferedReader buffReader = new BufferedReader(reader);
-
-				String strTmp = "";
-
-				while((strTmp = buffReader.readLine())!=null){
-				System.out.println(strTmp);
-
+				
+				PreparedStatement stmt = null;
+				String fileName = null;
+				File file= new File(fileName);
+				String tempString= null;
+				BufferedReader reader= null;
+				try{
+					System.out.println("read file line by line");
+					reader= new BufferedReader(new FileReader(file));
+					while ((tempString = reader.readLine()) != null) {
+						String sql= ("insert into book values (tempString)");
+						try{
+							con=DriverManager.getConnection(dbAddress, dbUsername, dbPassword);
+							con.setAutoCommit(false);
+							stmt= con.prepareStatement("load data local infile '' " + "into table loadtest fields terminated by ','");
+							StringBuilder sb= new StringBuilder();
+							InputStream is= new ByteArrayInputStream(sb.toString().getBytes());
+							((com.mysql.jdbc.Statement) stmt).setLocalInfileInputStream(is);
+							stmt.executeUpdate(sql);
+							con.commit();
+							}
+						catch(SQLException e) {
+							e.printStackTrace();
+							};}
+					reader.close();
+					}
+				catch(IOException e) {
+					e.printStackTrace();
+					}
+				finally{
+					if (reader != null) {
+						try{
+							reader.close();
+							}
+						catch(IOException e1) {
+							
+						}
+					}
 				}
-
-				buffReader.close();
-			}
+				return tempString;
+				}
+				
 			
 			// Set System Date
 			if (choice == 4)
