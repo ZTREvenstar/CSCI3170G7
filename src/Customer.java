@@ -265,7 +265,7 @@ public class Customer {
 						int updateStatus1 = pstmt.executeUpdate();					
 						
 						// insert records into table "ordering"
-						psql = "INSERT INTO ordering VALUES ('0', ?, ?)";
+						psql = "INSERT INTO ordering VALUES ('000000000', ?, ?)";
 						pstmt = conObj.prepareStatement(psql);
 						pstmt.setString(1, book_ISBN);
 						pstmt.setInt(2, book_quantity);
@@ -419,7 +419,7 @@ public class Customer {
 			}
 			bookQuantity.set(bookNum - 1, updated_quantity);
 			
-			// perform updating table ¡°book¡±, ¡°ordering¡± and ¡°orders¡±
+			// perform updating table "book", "ordering" and "orders"
 			psql = "UPDATE book B" 
 				 + "SET B.no_of_copies = ?"
 				 + "WHERE B.ISBN = ?";
