@@ -200,7 +200,7 @@ public class Bookstore {
 				try {
 					String psql = "SELECT sum(quantity),ISBN"
 							+ "RANK() OVER ( "
-							+ "		ORDER BY sum(quantity) DESC"
+							+ "		ORDER BY sum(quantity) DESC, ISBN"
 							+ "	) rank"
 							+ "FROM (SELECT sum(quantity),ISBN FROM ordering GROUP BY ISBN) "
 							+ "WHERE rank<=?";
