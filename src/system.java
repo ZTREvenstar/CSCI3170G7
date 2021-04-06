@@ -43,7 +43,7 @@ public class system {
 		}
 	}
 	
-	public static String system_main() throws IOException
+	public static void system_main() throws IOException
 	{
 		Connection con = null;
 		try 
@@ -231,8 +231,8 @@ public class system {
 						}
 					}
 				}
-				return tempString;
-				}
+				
+			}
 				
 			
 			// Set System Date
