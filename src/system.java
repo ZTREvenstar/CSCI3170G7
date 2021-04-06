@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class system {
 	public static String dbAddress = "jdbc:mysql://projgw.cse.cuhk.edu.hk:2633/db7";
@@ -142,7 +144,7 @@ public class system {
 							stmt= con.prepareStatement("load data local infile '' " + "into table loadtest fields terminated by ','");
 							StringBuilder sb= new StringBuilder();
 							InputStream is= new ByteArrayInputStream(sb.toString().getBytes());
-							((com.mysql.jdbc.Statement) stmt).setLocalInfileInputStream(is);
+							//((com.mysql.jdbc.Statement) stmt).setLocalInfileInputStream(is);
 							stmt.executeUpdate(sql);
 							con.commit();
 							}
