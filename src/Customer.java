@@ -245,10 +245,9 @@ public class Customer {
 										+ "Please input a number <= %d.\n", no_of_copies_available);
 					else
 					{ 
-						// if it's the first order, perform insert on "orders", else perform update
+						// if it's the first order, perform insert, else perform update
 						if (firstOrder)
 						{
-							firstOrder = false;
 							psql = "INSERT INTO orders VALUES ('000000000', '2222-22-22', 'N', ?, ?)";
 							pstmt = conObj.prepareStatement(psql);
 							pstmt.setInt(1, book_quantity * book_unit_price);
@@ -264,29 +263,52 @@ public class Customer {
 						}
 						int updateStatus1 = pstmt.executeUpdate();					
 						
-						// insert records into table "ordering"
-						psql = "INSERT INTO ordering VALUES ('000000000', ?, ?)";
+						// check whether the book has been in the ordering list
+						psql = "SELECT OL.ISBN "
+							 + "FROM ordering OL "
+							 + "WHERE OL.order_id = 000000000 AND OL.ISBN = ?";
 						pstmt = conObj.prepareStatement(psql);
 						pstmt.setString(1, book_ISBN);
-						pstmt.setInt(2, book_quantity);
+						boolean bookHasBeenOrdered = false;
+						while(pstmt.executeQuery().next())
+							bookHasBeenOrdered = true;
+						
+						// if the book has been ordered before, perform update, else perform insert
+						if (bookHasBeenOrdered == false)
+						{
+							psql = "INSERT INTO ordering VALUES ('000000000', ?, ?)";
+							pstmt = conObj.prepareStatement(psql);
+							pstmt.setString(1, book_ISBN);
+							pstmt.setInt(2, book_quantity);
+						}
+						else
+						{
+							psql = "UPDATE ordering OL "
+								 + "SET OL.quantity = OL.quantity + ? "
+								 + "WHERE OL.order_id = 000000000 AND OL.ISBN = ?";
+							pstmt = conObj.prepareStatement(psql);
+							pstmt.setInt(1, book_quantity);
+							pstmt.setString(2, book_ISBN);
+						}
 						int updateStatus2 = pstmt.executeUpdate();
-						// update records in table "orders"
-						// update numof copies available
-						// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-						//
-						//
-						//
-						//
+						
+						// update num_of_copies_available
+						psql = "UPDATE book B "
+							 + "SET B.no_of_copies = B.no_of_copies - ?"
+							 + "WHERE B.ISBN = ?";
+						pstmt = conObj.prepareStatement(psql);
+						pstmt.setInt(1, book_quantity);
+						pstmt.setString(2, book_ISBN);
+						int updateStatus3 = pstmt.executeUpdate();
 						
 						
-						System.out.printf("updateStatus1: %d      updateStatus2: %d\n", updateStatus1, updateStatus2);
+						System.out.printf("updateStatus1: %d      updateStatus2: %d      "
+								        + "updateStatus3: %d\n", updateStatus1, updateStatus2, updateStatus3);
 						break;
 					}
 				}
 				status = 2;
 				
-				
-				//final check    if the table is empty then perform delete
 			}
 			
 		}
