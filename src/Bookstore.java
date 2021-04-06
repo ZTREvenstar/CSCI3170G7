@@ -1,7 +1,12 @@
 import java.util.*;
 import java.io.*;
+import java.sql.*;
 
 public class Bookstore {
+	
+	public static String dbAddress = "jdbc:mysql://projgw.cse.cuhk.edu.hk:2633/db7";
+	public static String dbUsername = "Group7";
+	public static String dbPassword = "Group7";
 
 	public int bookstoreInterfaceHandler() throws IOException
 	{
@@ -35,11 +40,32 @@ public class Bookstore {
 	}
 	
 	public static void bookstore_main() throws IOException
-	{
+	{	
+		// Database driver issues
+		Connection con = null;
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(dbAddress, dbUsername, dbPassword);
+		}
+		catch (ClassNotFoundException e)
+		{
+			System.out.println("JAVA MYSQL DB Driver not found!");
+			System.exit(0);
+		}
+		catch (SQLException e)
+		{
+			System.out.println(e);
+			System.exit(0);
+		}	
+		System.out.print("Database connection SUCCESS!!!!");
+		
+		
 		Bookstore myBookstoreObj = new Bookstore();
 		
 		String orderid = null;
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+		
 		
 		while (true)
 		{
@@ -52,23 +78,62 @@ public class Bookstore {
 			{
 				System.out.printf("Please input the order ID:");
 				orderid = reader.readLine();
-				//***SQL Query
 				
-				//if satus is N and >=1 books is ordered
-				System.out.printf("the Shipping status of %s is      and      books ordered\n", orderid);
-				System.out.printf("Are you sure to update the shipping status? (Yes=Y)");
-				String updateornot=reader.readLine();
-				if (updateornot.equals("Y")) {
-					//***SQL update
+				ResultSet rs1=null, rs2 = null;
+				PreparedStatement pstmt = null;
+				String status=null;
+				int quantity=0, updateStatus1=0;
+				
+				//***SQL Query
+
+				try {
+					String psql = "SELECT O.shipping_status FROM orders O WHERE O.order_id=?";
+					pstmt = con.prepareStatement(psql);
+					pstmt.setString(1, orderid);
+					rs1 = pstmt.executeQuery();
 					
+					String psq2 = "SELECT OL.quantity FROM ordering OL WHERE OL.order_id=?";
+					pstmt = con.prepareStatement(psq2);
+					pstmt.setString(1, orderid);
+					rs2 = pstmt.executeQuery();
 					
-					System.out.printf("Updated shipping status\n\n");
+					status = rs1.getString("shipping_status");
+					quantity = rs2.getInt("quantity");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				else{ 
+
+
+				
+				if (status == "N" && quantity>=1) {
+					System.out.printf("the Shipping status of %s is %s and %d books ordered\n", orderid,status,quantity);
+					System.out.printf("Are you sure to update the shipping status? (Yes=Y)");
+					String updateornot=reader.readLine();
+					if (updateornot.equals("Y")) {
+						
+						//***SQL update
+						try {
+							String psq3 = "UPDATE ordering OL SET OL.shipping_status='Y' WHERE OL.order_id=?";
+							pstmt = con.prepareStatement(psq3);
+							pstmt.setString(1, orderid);
+							updateStatus1 = pstmt.executeUpdate();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						//for debug, delete later
+						System.out.printf("updateStatus1: %d\n", updateStatus1);
+						System.out.printf("Updated shipping status\n\n");
+					}
+					else{ 
 					System.out.printf("Update is cancelled.\n\n");
+					}
 				}
-				//if satus is not N and >=1 books is ordered
-				//System.out.printf("Sorry, you cannot update the order because the shipping status is not N or less than 1 book is ordered.");
+				else {
+				System.out.printf("Sorry, you cannot update the order because the shipping status is not N or less than 1 book is ordered.");
+				}
 			}
 			
 			// Order Query
@@ -76,8 +141,48 @@ public class Bookstore {
 			{
 				System.out.printf("Please input the Month for Order Query (e.g.2021-04):");
 				String monthofquery=reader.readLine();
-				//***SQL Query
 				
+				ResultSet rs3=null;
+				PreparedStatement pstmt = null;
+				
+				//***SQL Query
+				try {
+					String psql = "SELECT * FROM orders O WHERE O.o_date LIKE ?-__ ORDER BY O.order_id";
+					pstmt = con.prepareStatement(psql);
+					pstmt.setString(1, monthofquery);
+					rs3 = pstmt.executeQuery();
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				//output the result
+				int chargetotal = 0;
+				int counter=0;
+				try {
+					while(rs3.next())
+					{
+						counter++;
+						System.out.printf("Record: %d\n", counter);
+						
+						String order_id = rs3.getString("order_id");
+						String customer_id = rs3.getString("customer_id");
+						String o_data=rs3.getString("o_date");
+						int charge = rs3.getInt("charge");
+						
+						chargetotal=chargetotal+charge;
+						
+						System.out.println("order_id: " + order_id);
+						System.out.println("customer_id: " + customer_id);
+						System.out.println("date: " + o_data);
+						System.out.printf("charge: %d\n", charge);
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.printf("Total charges of the month is %d\n", chargetotal);
 				
 			}	
 			
@@ -85,14 +190,62 @@ public class Bookstore {
 			if (choice == 3) 
 			{
 				System.out.printf("Please input the N popular books number:");
-				String noofpopular=reader.readLine();
+				String input = reader.readLine();
+
 				//***SQL Query
 				
+				ResultSet rs4=null;
+				PreparedStatement pstmt = null;
 				
+				try {
+					String psql = "SELECT sum(quantity),ISBN"
+							+ "RANK() OVER ( "
+							+ "		ORDER BY sum(quantity) DESC"
+							+ "	) rank"
+							+ "FROM (SELECT sum(quantity),ISBN FROM ordering GROUP BY ISBN) "
+							+ "WHERE rank<=?";
+					pstmt = con.prepareStatement(psql);
+					pstmt.setString(1, input);
+					rs4 = pstmt.executeQuery();
+							
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}	
+				
+				//output the result
+				System.out.printf("ISBN           Title           Copies\n");
+				
+				try {
+					while(rs4.next())
+					{
+						String quantitysum = rs4.getString("sum(quantity)");
+						String ISBN=rs4.getString("ISBN");
+						
+						ResultSet rs5=null;
+						PreparedStatement pstmt1 = null;
+						
+						String psq2="SELECT b.title FROM book b WHERE b.ISBN=?";
+						pstmt1 = con.prepareStatement(psq2);
+						pstmt1.setString(1, ISBN);
+						rs5 = pstmt1.executeQuery();
+						String title=null;
+						while(rs5.next()) {
+							title=rs4.getString("title");
+						}
+						System.out.printf("%s     %s     %s\n", ISBN,title,quantitysum );
+						
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 			
 		}
 			
 	}
+
+
 }
