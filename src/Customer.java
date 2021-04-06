@@ -71,7 +71,7 @@ public class Customer {
 					break;
 				}
 				else
-					System.out.println("INVALID INPUT!");
+					System.out.println("INVALID INPUT!\n");
 			}
 			
 			// exit
@@ -162,7 +162,7 @@ public class Customer {
 				}
 				System.out.println("");
 			}
-			if (counter == 0) System.out.println("No records found.");
+			if (counter == 0) System.out.println("No records found.\n");
 		}		
 	}
 

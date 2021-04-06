@@ -154,17 +154,20 @@ public class system {
 			// Insert Data
 			if (choice == 3) 
 			{
-
-				
 				PreparedStatement stmt = null;
-				String fileName = null;
+				
+				String fileName = "book.txt";
 				File file= new File(fileName);
+				
 				String tempString= null;
 				BufferedReader reader= null;
+				
 				try{
 					System.out.println("read file line by line");
 					reader= new BufferedReader(new FileReader(file));
-					while ((tempString = reader.readLine()) != null) {
+					
+					while ((tempString = reader.readLine()) != null) 
+					{
 						String sql= ("insert into book values (tempString)");
 						try{
 							con=DriverManager.getConnection(dbAddress, dbUsername, dbPassword);
@@ -172,18 +175,21 @@ public class system {
 							stmt= con.prepareStatement("load data local infile '' " + "into table loadtest fields terminated by ','");
 							StringBuilder sb= new StringBuilder();
 							InputStream is= new ByteArrayInputStream(sb.toString().getBytes());
-							//((com.mysql.jdbc.Statement) stmt).setLocalInfileInputStream(is);
+							((com.mysql.jdbc.Statement) stmt).setLocalInfileInputStream(is);
 							stmt.executeUpdate(sql);
 							con.commit();
 							}
-						catch(SQLException e) {
+						catch(SQLException e) 
+						{
 							e.printStackTrace();
-							};}
+						}
+						;}
 					reader.close();
-					}
-				catch(IOException e) {
+				}
+				catch(IOException e) 
+				{
 					e.printStackTrace();
-					}
+				}
 				finally{
 					if (reader != null) {
 						try{
