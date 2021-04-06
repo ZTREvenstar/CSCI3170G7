@@ -43,7 +43,7 @@ public class system {
 		}
 	}
 	
-	public static void system_main() throws IOException
+	public static String system_main() throws IOException
 	{
 		Connection con = null;
 		try 
@@ -76,11 +76,8 @@ public class system {
 				
 				PreparedStatement pstmt = null;
 
-				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN),FOREIGN KEY (author_name) REFERENCES book_author ON DELETE NO ACTION)"
-				+ "				Create table customer(customer_id CHAR(10),name CHAR(50),shipping_address CHAR(200),credit_card_no CHAR(19),PRIMARY KEY (customer_id))"
-				+ "				Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer)"
-				+ "				Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders,FOREIGN KEY (ISBN) REFERENCES book)"
-				+ "				Create table book_author(ISBN CHAR(13),author_name CHAR(50),PRIMARY KEY (ISBN,author_name),FOREIGN KEY (ISBN) REFERENCES book)";
+				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN),FOREIGN KEY (author_name) REFERENCES book_author ON DELETE NO ACTION)";
+				
 				try {
 					pstmt = con.prepareStatement(psql);
 				} catch (SQLException e) {
@@ -94,6 +91,74 @@ public class system {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+				psql = "Create table customer(customer_id CHAR(10),name CHAR(50),shipping_address CHAR(200),credit_card_no CHAR(19),PRIMARY KEY (customer_id))";
+				try {
+					pstmt = con.prepareStatement(psql);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				try {
+					int updatestatus = pstmt.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+						
+				
+				psql = "Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer)";
+				try {
+					pstmt = con.prepareStatement(psql);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				try {
+					int updatestatus = pstmt.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				psql = "Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders,FOREIGN KEY (ISBN) REFERENCES book)";
+				try {
+					pstmt = con.prepareStatement(psql);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				try {
+					int updatestatus = pstmt.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				psql = "Create table book_author(ISBN CHAR(13),author_name CHAR(50),PRIMARY KEY (ISBN,author_name),FOREIGN KEY (ISBN) REFERENCES book)";
+				try {
+					pstmt = con.prepareStatement(psql);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				try {
+					int updatestatus = pstmt.executeUpdate();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+				
+				
 				
 				
 			}
@@ -166,8 +231,8 @@ public class system {
 						}
 					}
 				}
-
-			}
+				return tempString;
+				}
 				
 			
 			// Set System Date
