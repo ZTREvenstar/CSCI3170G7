@@ -63,6 +63,7 @@ public class system {
 		}	
 		System.out.print("Database connection SUCCESS!!!!");
 		system mySystemObj = new system();
+		
 		while (true)
 		{
 			int choice = mySystemObj.systemInterfaceHandler();
@@ -76,90 +77,77 @@ public class system {
 				
 				PreparedStatement pstmt = null;
 
-				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN))";
+				String psql = "Create table book"
+						       + "(ISBN CHAR(13),"
+						       + " title CHAR(100),"
+						       + " unit_price INTEGER,"
+						       + " no_of_copies INTEGER,"
+						       + " PRIMARY KEY (ISBN))";
 				
 				try {
 					pstmt = con.prepareStatement(psql);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
 					int updatestatus = pstmt.executeUpdate();
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
-				psql = "Create table customer(customer_id CHAR(10),name CHAR(50),shipping_address CHAR(200),credit_card_no CHAR(19),PRIMARY KEY (customer_id))";
+				psql = "Create table customer"
+						+ "(customer_id CHAR(10),"
+						+ " name CHAR(50),"
+						+ " shipping_address CHAR(200),"
+						+ " credit_card_no CHAR(19),"
+						+ " PRIMARY KEY (customer_id))";
 				try {
 					pstmt = con.prepareStatement(psql);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
 					int updatestatus = pstmt.executeUpdate();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+				} catch (SQLException e) 
+				{
 					e.printStackTrace();
-				}
-						
+				}						
 				
-				psql = "Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer(customer_id))";
+				psql = "Create table orders"
+						+ "(order_id CHAR(8),"
+						+ " o_date INTEGER,"
+						+ " shipping_status CHAR(1),"
+						+ " charge INTEGER,"
+						+ " customer_id CHAR(10),"
+						+ " PRIMARY KEY (order_id,customer_id),"
+						+ " FOREIGN KEY (customer_id) REFERENCES customer)";
 				try {
 					pstmt = con.prepareStatement(psql);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
 					int updatestatus = pstmt.executeUpdate();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+				} catch (SQLException e) 
+				{
 					e.printStackTrace();
 				}
 				
-				
-				psql = "Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders(order_id),FOREIGN KEY (ISBN) REFERENCES book(ISBN))";
+				psql = "Create table ordering"
+						+ "(order_id CHAR(8),"
+						+ " ISBN CHAR(13),"
+						+ " quantity INTEGER,"
+						+ " PRIMARY KEY (order_id,ISBN),"
+						+ " FOREIGN KEY (order_id) REFERENCES orders,"
+						+ " FOREIGN KEY (ISBN) REFERENCES book)";
 				try {
 					pstmt = con.prepareStatement(psql);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
 					int updatestatus = pstmt.executeUpdate();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+				} catch (SQLException e) 
+				{
 					e.printStackTrace();
-				}
+				}				
 				
-				
-				psql = "Create table book_author(ISBN CHAR(13),author_name CHAR(50),PRIMARY KEY (ISBN,author_name),FOREIGN KEY (ISBN) REFERENCES book(ISBN))";
+				psql = "Create table book_author"
+						+ "(ISBN CHAR(13),"
+						+ " author_name CHAR(50),"
+						+ " PRIMARY KEY (ISBN,author_name),"
+						+ " FOREIGN KEY (ISBN) REFERENCES book)";
 				try {
 					pstmt = con.prepareStatement(psql);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
 					int updatestatus = pstmt.executeUpdate();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+				} catch (SQLException e) 
+				{
 					e.printStackTrace();
-				}
-				
-				
-				
-				
-				
-				
+				}				
 				
 			}
 			
@@ -169,24 +157,17 @@ public class system {
 				PreparedStatement pstmt = null;
 
 				String psql = "DROP TABLE IF EXISTS book;"
-						+ "DROP TABLE IF EXISTS customer;"
-						+ "DROP TABLE IF EXISTS orders;"
-						+ "DROP TABLE IF EXISTS ordering;"
-						+ "DROP TABLE IF EXISTS book_author;";
+							+ "DROP TABLE IF EXISTS customer;"
+							+ "DROP TABLE IF EXISTS orders;"
+							+ "DROP TABLE IF EXISTS ordering;"
+							+ "DROP TABLE IF EXISTS book_author;";
 				try {
 					pstmt = con.prepareStatement(psql);
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				try {
 					int updatestatus = pstmt.executeUpdate();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
+				} catch (SQLException e) 
+				{
 					e.printStackTrace();
 				}
-			}	
 			
 			// Insert Data
 			if (choice == 3) 
@@ -241,8 +222,9 @@ public class system {
 				
 			}
 			
+			}
+		
 		}
 		
 	}
-		
 }
