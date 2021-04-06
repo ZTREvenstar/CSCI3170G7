@@ -76,7 +76,7 @@ public class system {
 				
 				PreparedStatement pstmt = null;
 
-				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN),FOREIGN KEY (author_name) REFERENCES book_author ON DELETE NO ACTION)";
+				String psql = "Create table book(ISBN CHAR(13),title CHAR(100),unit_price INTEGER,no_of_copies INTEGER,PRIMARY KEY (ISBN))";
 				
 				try {
 					pstmt = con.prepareStatement(psql);
@@ -108,7 +108,7 @@ public class system {
 				}
 						
 				
-				psql = "Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer)";
+				psql = "Create table orders(order_id CHAR(8),o_date INTEGER,shipping_status CHAR(1),charge INTEGER,customer_id CHAR(10),PRIMARY KEY (order_id,customer_id),FOREIGN KEY (customer_id) REFERENCES customer(customer_id))";
 				try {
 					pstmt = con.prepareStatement(psql);
 				} catch (SQLException e) {
@@ -124,7 +124,7 @@ public class system {
 				}
 				
 				
-				psql = "Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders,FOREIGN KEY (ISBN) REFERENCES book)";
+				psql = "Create table ordering(order_id CHAR(8),ISBN CHAR(13),quantity INTEGER,PRIMARY KEY (order_id,ISBN),FOREIGN KEY (order_id) REFERENCES orders(order_id),FOREIGN KEY (ISBN) REFERENCES book(ISBN))";
 				try {
 					pstmt = con.prepareStatement(psql);
 				} catch (SQLException e) {
@@ -140,7 +140,7 @@ public class system {
 				}
 				
 				
-				psql = "Create table book_author(ISBN CHAR(13),author_name CHAR(50),PRIMARY KEY (ISBN,author_name),FOREIGN KEY (ISBN) REFERENCES book)";
+				psql = "Create table book_author(ISBN CHAR(13),author_name CHAR(50),PRIMARY KEY (ISBN,author_name),FOREIGN KEY (ISBN) REFERENCES book(ISBN))";
 				try {
 					pstmt = con.prepareStatement(psql);
 				} catch (SQLException e) {
