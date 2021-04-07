@@ -117,9 +117,9 @@ public class Customer {
 							     + "Input the author name:\n");
 				String inputAuthorName = reader.readLine();
 				
-				String psql = "SELECT B.ISBN, B.title, B.unit_price, B.no_of_copies"
-						    + "FROM book B, book_author BA"
-						    + "WHERE B.ISBN = BA.ISBN AND BA.author_name LIKE ?"
+				String psql = "SELECT B.ISBN, B.title, B.unit_price, B.no_of_copies "
+						    + "FROM book B, book_author BA "
+						    + "WHERE B.ISBN = BA.ISBN AND BA.author_name LIKE ? "
 						    + "ORDER BY B.title, B.ISBN";
 				
 				pstmt = conObj.prepareStatement(psql);
@@ -231,8 +231,8 @@ public class Customer {
 					book_quantity = reader.read();
 				
 					// check if the quantity are available
-					String psql = "SELECT B.no_of_copies, B.unit_price"
-						    	+ "FROM book B"
+					String psql = "SELECT B.no_of_copies, B.unit_price "
+						    	+ "FROM book B "
 						    	+ "WHERE B.ISBN = ?";
 					pstmt = conObj.prepareStatement(psql);
 					pstmt.setString(1, book_ISBN);
@@ -265,7 +265,7 @@ public class Customer {
 							pstmt = conObj.prepareStatement(psql);
 							pstmt.setString(1, neworderid);
 							//change needed
-							pstmt.setString(2, lastestorderdate);
+							pstmt.setString(2, system.systemDate);
 							//
 							pstmt.setInt(3, book_quantity * book_unit_price);
 							pstmt.setString(4, customerID);
@@ -666,13 +666,4 @@ public class Customer {
 	}
 		
 }
-
-
-
-
-
-
-
-
-
 
