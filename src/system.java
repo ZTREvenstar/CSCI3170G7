@@ -491,6 +491,12 @@ public class system {
 				String input = null;
 				System.out.printf("Please Input the date (YYYYMMDD): ");
 				input = reader.readLine();
+				
+				if (input.compareTo("00000101")<0||input.compareTo("99991231")>0) {
+					System.out.println("Invalid input!");
+				}
+				else {
+				
 				StringBuffer sb = new StringBuffer(); 
 				sb.append(input).insert(4,"-");
 				sb.insert(7,"-");
@@ -523,7 +529,7 @@ public class system {
 				
 				System.out.println("Today is " + mainHandler.systemdate);
 				}
-			
+			}
 			}
 		
 	}
