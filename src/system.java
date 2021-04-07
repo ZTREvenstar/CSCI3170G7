@@ -165,7 +165,7 @@ public class system {
 				txtList.add("ordering.txt");
 				txtList.add("customer.txt");
 				
-				String fileName = txtList.get(1);
+				String fileName = txtList.get(0);
 				File file= new File(fileName);
 				
 				// prepare the buffer reader
@@ -184,11 +184,19 @@ public class system {
 				{
 					txtNotNULL = true;
 					sql = null;
-					String stringarray[] = tempString.split("|");			
+					String stringarray[] = tempString.split("\\|");	
+					
+					//
+					for(String out: stringarray)
+						System.out.println(out);
+					System.out.printf("array size == %d\n", stringarray.length);
+						
+					
 					sql =  "INSERT INTO book VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
+						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
 						if (StrOrInt[i] == 1) // Is a String
