@@ -489,7 +489,7 @@ public class Customer {
 			pstmt.setString(4, orderID);
 			pstmt.executeUpdate(); 
 			
-			System.out.println("The update is done!");.
+			System.out.println("The update is done!");
 			
 			// print order info and book list again
 			System.out.print("OrderID: " + order_id + "   ");
