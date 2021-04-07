@@ -181,16 +181,16 @@ public class Customer {
 		
 		String customerID = reader.readLine();
 		
-		System.out.println("What books do you want to order??");
-		System.out.println("Input ISBN and then the quantity.");
-		System.out.println("You can press \"L\" to see ordered list, or \"F\" to finish ordering.");
+		System.out.println(">> What books do you want to order??");
+		System.out.println(">> Input ISBN and then the quantity.");
+		System.out.println(">> You can press \"L\" to see ordered list, or \"F\" to finish ordering.");
 
 		while(true)
 		{
 			String book_ISBN = null;
 			int book_quantity = 0;
 			
-			System.out.print("Please enter the book's ISBN:");
+			System.out.print("Please enter the book's ISBN: ");
 			
 			book_ISBN = reader.readLine();
 			
@@ -225,7 +225,7 @@ public class Customer {
 			{	
 				// assume that ISBN input always exist.
 				
-				System.out.printf("Please enter the quantity of the order");
+				System.out.printf("Please enter the quantity of the order: ");
 				while (true)
 				{
 					book_quantity = reader.read();
@@ -237,9 +237,12 @@ public class Customer {
 					pstmt = conObj.prepareStatement(psql);
 					pstmt.setString(1, book_ISBN);
 					rs = pstmt.executeQuery();
-					int no_of_copies_available = rs.getInt("no_of_copies");
-					int book_unit_price = rs.getInt("book_unit_price");
-											
+					int no_of_copies_available = 0;
+					int book_unit_price = 0;
+					while (rs.next()) {
+						no_of_copies_available = rs.getInt("no_of_copies");
+						book_unit_price = rs.getInt("unit_price");
+					}
 					// quantity ordered not available
 					if (no_of_copies_available < book_quantity)
 						System.out.printf("Quantity requested exceeds the maximum number available!\n"
