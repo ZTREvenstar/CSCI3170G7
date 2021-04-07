@@ -292,7 +292,11 @@ public class Customer {
 							pstmt.setInt(2, book_quantity * book_unit_price);
 							pstmt.setString(3, neworderid);
 						}
-						int updateStatus1 = pstmt.executeUpdate();					
+						int updateStatus1 = pstmt.executeUpdate();	
+						
+						pstmt.close();
+						
+						System.out.println("Update table Order SUCCESS!");///////////
 						
 						// add book
 						// check whether the book has been in the ordering list
@@ -303,8 +307,11 @@ public class Customer {
 						pstmt.setString(1, neworderid);
 						pstmt.setString(2, book_ISBN);
 						boolean bookHasBeenOrdered = false;
-						while(pstmt.executeQuery().next())
+						rs = pstmt.executeQuery();
+						while(rs.next())
 							bookHasBeenOrdered = true;
+						
+						System.out.println("CHECK BOOK EXIST FINISHED");///////////
 						
 						// if the book has been ordered before, perform update, else perform insert
 						if (bookHasBeenOrdered == false)
@@ -315,6 +322,8 @@ public class Customer {
 							pstmt.setString(1, neworderid);
 							pstmt.setString(2, book_ISBN);
 							pstmt.setInt(3, book_quantity);
+							
+							System.out.println("11111111111111111111111111");
 						}
 						else
 						{
@@ -325,6 +334,8 @@ public class Customer {
 							pstmt.setInt(1, book_quantity);
 							pstmt.setString(2, neworderid);
 							pstmt.setString(3, book_ISBN);
+							
+							System.out.println("2222222222222222222222222222");
 						}
 						int updateStatus2 = pstmt.executeUpdate();
 						
@@ -501,16 +512,17 @@ public class Customer {
 			pstmt.setString(3, bookList.get(bookNum - 1));
 			pstmt.executeUpdate(); 
 					
-			psql = "UPDATE orders O " 
-				 + "SET O.charge = O.charge ? ?, O.o_date = ? "
-				 + "WHERE O.order_id = ?";
-			if (addOrRemove.equals("add"))
-				pstmt.setString(1, "+");
-			if (addOrRemove.equals("remove"))
-				pstmt.setString(1, "-");
-			pstmt.setInt(2, alterNum * unit_price);
-			pstmt.setString(3, mainHandler.systemdate);
-			pstmt.setString(4, orderID);
+			psql  = "UPDATE orders O "; 
+			if (addOrRemove.equals("add")) {
+				psql += "SET O.charge = O.charge + ?, O.o_date = ? ";
+			}
+			if (addOrRemove.equals("remove")) {
+				psql += "SET O.charge = O.charge - ?, O.o_date = ? ";
+			}
+			psql += "WHERE O.order_id = ?";
+			pstmt.setInt(1, alterNum * unit_price);
+			pstmt.setString(2, mainHandler.systemdate);
+			pstmt.setString(3, orderID);
 			pstmt.executeUpdate(); 
 			
 			System.out.println("The update is done!");
