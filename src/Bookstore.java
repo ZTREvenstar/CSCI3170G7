@@ -110,7 +110,7 @@ public class Bookstore {
 
 
 				
-				if (status == "N" && quantity>=1) {
+				if (status.equals("N") && quantity>=1) {
 					System.out.printf("the Shipping status of %s is %s and %d books ordered\n", orderid,status,quantity);
 					System.out.printf("Are you sure to update the shipping status? (Yes=Y)");
 					String updateornot=reader.readLine();
