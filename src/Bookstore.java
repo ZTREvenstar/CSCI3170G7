@@ -114,7 +114,7 @@ public class Bookstore {
 						
 						//***SQL update
 						try {
-							String psq3 = "UPDATE ordering OL SET OL.shipping_status='Y' WHERE OL.order_id=?";
+							String psq3 = "UPDATE orders OL SET OL.shipping_status='Y' WHERE OL.order_id=?";
 							pstmt = con.prepareStatement(psq3);
 							pstmt.setString(1, orderid);
 							updateStatus1 = pstmt.executeUpdate();
@@ -132,7 +132,7 @@ public class Bookstore {
 					}
 				}
 				else {
-				System.out.printf("Sorry, you cannot update the order because the shipping status is not N or less than 1 book is ordered.");
+				System.out.printf("Sorry, you cannot update the order because the shipping status is not N or less than 1 book is ordered.\n");
 				}
 			}
 			
@@ -147,9 +147,9 @@ public class Bookstore {
 				
 				//***SQL Query
 				try {
-					String psql = "SELECT * FROM orders O WHERE O.o_date LIKE ?-__ ORDER BY O.order_id";
+					String psql = "SELECT * FROM orders WHERE o_date LIKE '?' ORDER BY order_id";
 					pstmt = con.prepareStatement(psql);
-					pstmt.setString(1, monthofquery);
+					pstmt.setString(1, monthofquery+"-__");
 					rs3 = pstmt.executeQuery();
 					
 				} catch (SQLException e) {
@@ -201,12 +201,13 @@ public class Bookstore {
 				ResultSet rs4=null;
 				PreparedStatement pstmt = null;
 				
+				System.out.printf("You input %s",input);
 				try {
-					String psql = "SELECT sum(quantity),ISBN"
+					String psql = "SELECT *,"
 							+ "RANK() OVER ( "
-							+ "		ORDER BY sum(quantity) DESC, ISBN"
+							+ "		ORDER BY sum DESC, ISBN"
 							+ "	) rank"
-							+ "FROM (SELECT sum(quantity),ISBN FROM ordering GROUP BY ISBN) "
+							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)nest "
 							+ "WHERE rank<=?";
 					pstmt = con.prepareStatement(psql);
 					pstmt.setString(1, input);
