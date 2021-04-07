@@ -87,7 +87,7 @@ public class Customer {
 						         + "Input the ISBN:\n");
 				String inputISBN = reader.readLine();
 				
-				String psql = "SELECT * FROM book B WHERE B.ISBN = ?";
+				String psql = "SELECT * FROM book B WHERE B.ISBN = ? ORDER BY B.title, B.ISBN";
 
 				pstmt = conObj.prepareStatement(psql);
 				pstmt.setString(1, inputISBN);			
@@ -102,7 +102,7 @@ public class Customer {
 						         + "Input the book title:\n");
 				String inputBooktitle = reader.readLine();
 				
-				String psql = "SELECT * FROM book B WHERE B.title LIKE ?";
+				String psql = "SELECT * FROM book B WHERE B.title LIKE ? ORDER BY B.title, B.ISBN";
 				
 				pstmt = conObj.prepareStatement(psql);
 				pstmt.setString(1, "%"+inputBooktitle+"%");
@@ -119,7 +119,8 @@ public class Customer {
 				
 				String psql = "SELECT B.ISBN, B.title, B.unit_price, B.no_of_copies"
 						    + "FROM book B, book_author BA"
-						    + "WHERE B.ISBN = BA.ISBN AND BA.author_name LIKE ?";
+						    + "WHERE B.ISBN = BA.ISBN AND BA.author_name LIKE ?"
+						    + "ORDER BY B.title, B.ISBN";
 				
 				pstmt = conObj.prepareStatement(psql);
 				pstmt.setString(1, "%"+inputAuthorName+"%");
@@ -148,7 +149,7 @@ public class Customer {
 				// output a list of authors
 				ResultSet rs2 = null;
 				PreparedStatement pstmt2 = null;			
-				String psql2 = "SELECT author_name FROM book_author BA WHERE BA.ISBN = ?";
+				String psql2 = "SELECT author_name FROM book_author BA WHERE BA.ISBN = ? ORDER BY author_name";
 				pstmt2 = conObj.prepareStatement(psql2);
 				pstmt2.setString(1, ISBN);
 				rs2 = pstmt2.executeQuery();
@@ -521,7 +522,8 @@ public class Customer {
 
 		String psql = "SELECT *"
 			    	+ "FROM orders O"
-			    	+ "WHERE O.customer_id = ? AND O.o_date LIKE ?";
+			    	+ "WHERE O.customer_id = ? AND O.o_date LIKE ?"
+			    	+ "ORDER BY O.order_id";
 	
 		pstmt = conObj.prepareStatement(psql);
 		pstmt.setString(1, customerID);
