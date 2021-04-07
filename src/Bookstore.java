@@ -202,11 +202,9 @@ public class Bookstore {
 
 				//***SQL Query
 				
-				ResultSet rs4=null;
-				PreparedStatement pstmt = null;
-				
 				System.out.printf("You input %s",input);
 				
+				/*
 				try {
 					String psql = "SELECT sum, ISBN,"
 							+ "RANK() OVER ( "
@@ -250,7 +248,75 @@ public class Bookstore {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			
+				*/
+				
+				ResultSet rs4=null;
+				PreparedStatement pstmt = null;
+				
+				try {
+					String psql = "SELECT sum, ISBN "
+							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)nest "
+							+ "ORDER BY sum DESC "
+							+ "LIMIT ? ";
+					pstmt = con.prepareStatement(psql);
+					pstmt.setString(1, input);
+					rs4 = pstmt.executeQuery();
+							
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				//get the quantity of the most unpopular book
+				int smallsum=999999;
+				try {
+					while(rs4.next())
+					{
+						int quantitysum = rs4.getInt("sum");
+						
+						if (quantitysum<smallsum) {
+							smallsum=quantitysum;
+						}
+						
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				//output the result
+				System.out.printf("ISBN           Title           Copies\n");
+				
+				ResultSet rs5=null;
+				PreparedStatement pstmt1 = null;
+				
+				try {
+					String psq2 = "SELECT b.ISBN, b.title, a.sum "
+								+ "FROM book b, (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)a "
+								+ "WHERE a.sum>=? AND a.ISBN=b.ISBN ";
+					pstmt1 = con.prepareStatement(psq2);
+					pstmt1.setString(1, input);
+					rs5 = pstmt.executeQuery();
+							
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				try {
+					while(rs5.next())
+					{
+						String quantitysum = rs5.getString("sum");
+						String ISBN=rs5.getString("ISBN");
+						String title=rs5.getString("title");
+						System.out.printf("%s     %s     %s\n", ISBN,title,quantitysum );
+						
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			
 		}
