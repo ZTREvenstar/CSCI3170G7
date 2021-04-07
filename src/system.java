@@ -244,16 +244,10 @@ public class system {
 					sql = null;
 					String stringarray[] = tempString.split("\\|");	
 					
-					for(String out: stringarray)
-						System.out.println(out);
-					System.out.printf("array size == %d\n", stringarray.length);
-						
-					
 					sql =  "INSERT INTO book VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
-						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
 						if (StrOrIntbook[i] == 1) // Is a String
@@ -262,8 +256,6 @@ public class system {
 						    sql += stringarray[i];
 					}
 					sql += ")";
-					
-					System.out.println("=====! sql");
 					
 					if (txtNotNULL)
 					{
@@ -297,18 +289,12 @@ public class system {
 				{
 					txtNotNULL = true;
 					sql = null;
-					String stringarray[] = tempString.split("\\|");	
-					
-					for(String out: stringarray)
-						System.out.println(out);
-					System.out.printf("array size == %d\n", stringarray.length);
-						
+					String stringarray[] = tempString.split("\\|");		
 					
 					sql =  "INSERT INTO customer VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
-						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
 						if (StrOrIntcustomer[i] == 1) // Is a String
@@ -317,8 +303,6 @@ public class system {
 						    sql += stringarray[i];
 					}
 					sql += ")";
-					
-					System.out.println("=====! sql");
 					
 					if (txtNotNULL)
 					{
@@ -354,16 +338,10 @@ public class system {
 					sql = null;
 					String stringarray[] = tempString.split("\\|");	
 					
-					for(String out: stringarray)
-						System.out.println(out);
-					System.out.printf("array size == %d\n", stringarray.length);
-						
-					
 					sql =  "INSERT INTO orders VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
-						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
 						if (StrOrIntorders[i] == 1) // Is a String
@@ -372,8 +350,6 @@ public class system {
 						    sql += stringarray[i];
 					}
 					sql += ")";
-					
-					System.out.println("=====! sql");
 					
 					if (txtNotNULL)
 					{
@@ -407,18 +383,12 @@ public class system {
 				{
 					txtNotNULL = true;
 					sql = null;
-					String stringarray[] = tempString.split("\\|");	
-					
-					for(String out: stringarray)
-						System.out.println(out);
-					System.out.printf("array size == %d\n", stringarray.length);
-						
+					String stringarray[] = tempString.split("\\|");		
 					
 					sql =  "INSERT INTO ordering VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
-						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
 						if (StrOrIntordering[i] == 1) // Is a String
@@ -427,9 +397,7 @@ public class system {
 						    sql += stringarray[i];
 					}
 					sql += ")";
-					
-					System.out.println("=====! sql");
-					
+										
 					if (txtNotNULL)
 					{
 						try {
@@ -464,16 +432,10 @@ public class system {
 					sql = null;
 					String stringarray[] = tempString.split("\\|");	
 					
-					for(String out: stringarray)
-						System.out.println(out);
-					System.out.printf("array size == %d\n", stringarray.length);
-						
-					
 					sql =  "INSERT INTO book_author VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
-						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
 						if (StrOrIntbook_author[i] == 1) // Is a String
@@ -482,9 +444,7 @@ public class system {
 						    sql += stringarray[i];
 					}
 					sql += ")";
-					
-					System.out.println("=====! sql");
-					
+										
 					if (txtNotNULL)
 					{
 						try {
@@ -505,7 +465,13 @@ public class system {
 			// Set System Date
 			if (choice == 4)
 			{
+				/*System.out.printf("Please Input the date (YYYYMMDD):");
 				
+				
+				for(String out: stringarray)
+					System.out.println(out);
+				System.out.printf("array size == %d\n", stringarray.length);
+				*/
 			}
 			
 			}
