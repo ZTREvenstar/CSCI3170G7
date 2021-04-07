@@ -398,7 +398,7 @@ public class system {
 				reader= new BufferedReader(new FileReader(file));;
 				
 				// 1 represents the corresponding attribute is type String, 0 represents Int
-				int StrOrIntordering[] = {0,1,0};
+				int StrOrIntordering[] = {1,1,0};
 				
 				// read line by line
 				sql = null;
