@@ -34,7 +34,7 @@ public class system {
 		while(true)
 		{
 			System.out.println("Please enter your choice??..");
-			input = reader.readLine();		
+			input = reader.readLine();
 			if(input.equals("1") || input.equals("2") || input.equals("3") || input.equals("4") || input.equals("5"))
 			{
 				int choice = input.charAt(0) - '0';
@@ -45,7 +45,7 @@ public class system {
 		}
 	}
 	
-	public static void system_main() throws IOException
+	public static void system_main() throws IOException, SQLException
 	{
 		Connection con = null;
 		try 
@@ -465,13 +465,33 @@ public class system {
 			// Set System Date
 			if (choice == 4)
 			{
-				/*System.out.printf("Please Input the date (YYYYMMDD):");
+				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+				String input = null;
+				System.out.printf("Please Input the date (YYYYMMDD): ");
+				input = reader.readLine();
+				StringBuffer sb = new StringBuffer(); 
+				sb.append(input).insert(4,"-");
+				sb.append(input).insert(7,"-");
+				input=sb.toString();
 				
+				String sql = "SELECT *"
+						+ "FROM orders"
+						+ "ORDER BY o_date DESC"
+						+ "LIMIT 1";
 				
-				for(String out: stringarray)
-					System.out.println(out);
-				System.out.printf("array size == %d\n", stringarray.length);
-				*/
+				PreparedStatement pstmt = con.prepareStatement(sql);
+				ResultSet rs = pstmt.executeQuery();
+				
+				String odate = rs.getString("o_date");
+				System.out.printf("Latest date in orders: %s", odate);
+				
+				String finaldate = null;
+				if(input.compareTo(odate) > 0)
+					finaldate = input;
+				else
+					finaldate = odate;
+				
+				System.out.println("Today is " + finaldate);   
 			}
 			
 			}
