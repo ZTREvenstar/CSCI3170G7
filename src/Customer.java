@@ -259,7 +259,12 @@ public class Customer {
 							    		+ "LIMIT 1 ";
 							pstmt = conObj.prepareStatement(psq2);
 							rs = pstmt.executeQuery();
-							String lastestorderid = rs.getString("order_id");
+							
+							String lastestorderid = null;
+							while (rs.next()) {
+								lastestorderid = rs.getString("order_id");
+							}
+							
 							int numneworderid = Integer.parseInt(lastestorderid)+1;
 							neworderid = String.format("%08d", numneworderid);
 							
