@@ -161,12 +161,12 @@ public class Bookstore {
 				
 				//output the result
 				int chargetotal = 0;
-				int counter=0;
+				//int counter=0;
 				try {
 					while(rs3.next())
 					{
-						counter++;
-						System.out.printf("Record: %d\n", counter);
+						//counter++;
+						//System.out.printf("Record: %d\n", counter);
 						
 						String order_id = rs3.getString("order_id");
 						String customer_id = rs3.getString("customer_id");
@@ -185,10 +185,11 @@ public class Bookstore {
 					e.printStackTrace();
 				}
 				
-				if (counter!=0) 
+				/*if (counter!=0) 
 					System.out.printf("Total charges of the month is %d\n", chargetotal);
 				else 
 					System.out.printf("No record is found\n");
+				*/
 				
 			}	
 			
