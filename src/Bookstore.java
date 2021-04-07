@@ -110,7 +110,7 @@ public class Bookstore {
 
 
 				
-				if (status == "N" && quantity>=1) {
+				if (status.equals("N") && quantity>=1) {
 					System.out.printf("the Shipping status of %s is %s and %d books ordered\n", orderid,status,quantity);
 					System.out.printf("Are you sure to update the shipping status? (Yes=Y)");
 					String updateornot=reader.readLine();
@@ -127,8 +127,6 @@ public class Bookstore {
 							e.printStackTrace();
 						}
 						
-						//for debug, delete later
-						System.out.printf("updateStatus1: %d\n", updateStatus1);
 						System.out.printf("Updated shipping status\n\n");
 					}
 					else{ 
@@ -151,7 +149,7 @@ public class Bookstore {
 				
 				//***SQL Query
 				try {
-					String psql = "SELECT * FROM orders WHERE o_date LIKE '?' ORDER BY order_id";
+					String psql = "SELECT * FROM orders WHERE o_date LIKE ? ORDER BY order_id";
 					pstmt = con.prepareStatement(psql);
 					pstmt.setString(1, monthofquery+"-__");
 					rs3 = pstmt.executeQuery();
@@ -180,7 +178,7 @@ public class Bookstore {
 						System.out.println("order_id: " + order_id);
 						System.out.println("customer_id: " + customer_id);
 						System.out.println("date: " + o_data);
-						System.out.printf("charge: %d\n", charge);
+						System.out.printf("charge: %d\n\n", charge);
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
@@ -188,9 +186,10 @@ public class Bookstore {
 				}
 				
 				if (counter!=0) 
-					System.out.printf("Total charges of the month is %d\n", chargetotal);
+					System.out.printf("Total charges of the month is %d\n\n", chargetotal);
 				else 
-					System.out.printf("No record is found\n");
+					System.out.printf("No record is found\n\n");
+	
 				
 			}	
 			
@@ -202,7 +201,7 @@ public class Bookstore {
 
 				//***SQL Query
 				
-				System.out.printf("You input %s",input);
+				System.out.printf("You input is %s\n",input);
 				
 				/*
 				try {
@@ -255,7 +254,7 @@ public class Bookstore {
 				
 				try {
 					String psql = "SELECT sum, ISBN "
-							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)nest "
+							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN) "
 							+ "ORDER BY sum DESC "
 							+ "LIMIT ? ";
 					pstmt = con.prepareStatement(psql);
