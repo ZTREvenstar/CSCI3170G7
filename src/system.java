@@ -45,7 +45,7 @@ public class system {
 		}
 	}
 	
-	public static void system_main() throws IOException, SQLException
+	public static void system_main() throws IOException
 	{
 		Connection con = null;
 		try 
