@@ -387,7 +387,7 @@ public class Customer {
 		
 		// display the book list
 		psql = "SELECT OL.ISBN, OL.quantity "
-			 + "FROM orders OL "
+			 + "FROM ordering OL "
 			 + "WHERE OL.order_id = ?";
 		pstmt = conObj.prepareStatement(psql);
 		pstmt.setString(1, orderID);
