@@ -240,6 +240,18 @@ public class Customer {
 					int no_of_copies_available = rs.getInt("no_of_copies");
 					int book_unit_price = rs.getInt("book_unit_price");
 					
+					//get the latest the order_id
+					String psq2 = "SELECT O.order_id "
+					    		+ "FROM orders O "
+					    		+ "ORDER BY O.oreder_id DESC "
+					    		+ "LIMIT 1 ";
+					pstmt = conObj.prepareStatement(psq2);
+					rs = pstmt.executeQuery();
+					String lastestorderid = rs.getString("order_id");
+					int numneworderid = Integer.parseInt(lastestorderid)+1;
+					String neworderid = String.format("%08d", numneworderid);
+
+									
 					// quantity ordered not available
 					if (no_of_copies_available < book_quantity)
 						System.out.printf("Quantity requested exceeds the maximum number available!\n"
@@ -249,11 +261,16 @@ public class Customer {
 						// if it's the first order, perform insert, else perform update
 						if (firstOrder)
 						{
-							psql = "INSERT INTO orders VALUES ('000000000', '2222-22-22', 'N', ?, ?)";
+							psql = "INSERT INTO orders VALUES (?, ?, 'N', ?, ?)";
 							pstmt = conObj.prepareStatement(psql);
-							pstmt.setInt(1, book_quantity * book_unit_price);
-							pstmt.setString(2, customerID);
+							pstmt.setString(1, neworderid);
+							//change needed
+							pstmt.setString(2, lastestorderdate);
+							//
+							pstmt.setInt(3, book_quantity * book_unit_price);
+							pstmt.setString(4, customerID);
 						}
+						//!!!!!!!!!!!!!
 						else
 						{
 							psql = "UPDATE orders O"
