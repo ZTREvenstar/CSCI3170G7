@@ -217,10 +217,11 @@ public class system {
 				// String array stores all txt 
 				ArrayList<String> txtList = new ArrayList<String>();
 				txtList.add("book.txt");
-				txtList.add("book_author.txt");
+				txtList.add("customer.txt");
 				txtList.add("orders.txt");
 				txtList.add("ordering.txt");
-				txtList.add("customer.txt");
+				txtList.add("book_author.txt");
+				
 				//1111111111111book
 				String fileName = txtList.get(0);
 				File file= new File(fileName);
@@ -279,62 +280,8 @@ public class system {
 				reader.close();
 				
 				
-				//222222222222222book_author
+				//222222222customer
 				fileName = txtList.get(1);
-				file= new File(fileName);
-				
-				// prepare the buffer reader
-				reader= new BufferedReader(new FileReader(file));;
-				
-				// 1 represents the corresponding attribute is type String, 0 represents Int
-				int StrOrIntbook_author[] = {1, 1};
-				
-				// read line by line
-				sql = null;
-				txtNotNULL = false;
-				while ((tempString = reader.readLine()) != null) // a while loop read one txt
-				{
-					txtNotNULL = true;
-					sql = null;
-					String stringarray[] = tempString.split("\\|");	
-					
-					for(String out: stringarray)
-						System.out.println(out);
-					System.out.printf("array size == %d\n", stringarray.length);
-						
-					
-					sql =  "INSERT INTO book_author VALUES "
-						 + "(";
-					for (int i = 0; i < stringarray.length; i++)
-					{
-						System.out.printf("i == %d ", i);
-						if (i != 0) //Whether to add a comma
-							sql += ", ";
-						if (StrOrIntbook_author[i] == 1) // Is a String
-							sql += "'" + stringarray[i] + "'";
-						if (StrOrIntbook_author[i] == 0) // Is a Int
-						    sql += stringarray[i];
-					}
-					sql += ")";
-					
-					System.out.println("=====! sql");
-					
-					if (txtNotNULL)
-					{
-						try {
-							pstmt = con.prepareStatement(sql);
-							int updatestatus = pstmt.executeUpdate();
-						} catch (SQLException e) 
-						{
-							e.printStackTrace();
-						}
-					}	
-					
-				}
-				reader.close();
-				
-				//3333333333customer
-				fileName = txtList.get(2);
 				file= new File(fileName);
 				
 				// prepare the buffer reader
@@ -367,6 +314,61 @@ public class system {
 						if (StrOrIntcustomer[i] == 1) // Is a String
 							sql += "'" + stringarray[i] + "'";
 						if (StrOrIntcustomer[i] == 0) // Is a Int
+						    sql += stringarray[i];
+					}
+					sql += ")";
+					
+					System.out.println("=====! sql");
+					
+					if (txtNotNULL)
+					{
+						try {
+							pstmt = con.prepareStatement(sql);
+							int updatestatus = pstmt.executeUpdate();
+						} catch (SQLException e) 
+						{
+							e.printStackTrace();
+						}
+					}	
+					
+				}
+				reader.close();
+				
+				
+				//33333333orders
+				fileName = txtList.get(2);
+				file= new File(fileName);
+				
+				// prepare the buffer reader
+				reader= new BufferedReader(new FileReader(file));;
+				
+				// 1 represents the corresponding attribute is type String, 0 represents Int
+				int StrOrIntorders[] = {0,1,1,0,1};
+				
+				// read line by line
+				sql = null;
+				txtNotNULL = false;
+				while ((tempString = reader.readLine()) != null) // a while loop read one txt
+				{
+					txtNotNULL = true;
+					sql = null;
+					String stringarray[] = tempString.split("\\|");	
+					
+					for(String out: stringarray)
+						System.out.println(out);
+					System.out.printf("array size == %d\n", stringarray.length);
+						
+					
+					sql =  "INSERT INTO orders VALUES "
+						 + "(";
+					for (int i = 0; i < stringarray.length; i++)
+					{
+						System.out.printf("i == %d ", i);
+						if (i != 0) //Whether to add a comma
+							sql += ", ";
+						if (StrOrIntorders[i] == 1) // Is a String
+							sql += "'" + stringarray[i] + "'";
+						if (StrOrIntorders[i] == 0) // Is a Int
 						    sql += stringarray[i];
 					}
 					sql += ")";
@@ -442,7 +444,8 @@ public class system {
 				}
 				reader.close();
 				
-				//5555555orders
+				
+				//5555555555book_author
 				fileName = txtList.get(4);
 				file= new File(fileName);
 				
@@ -450,7 +453,7 @@ public class system {
 				reader= new BufferedReader(new FileReader(file));;
 				
 				// 1 represents the corresponding attribute is type String, 0 represents Int
-				int StrOrIntorders[] = {0,1,1,0,1};
+				int StrOrIntbook_author[] = {1, 1};
 				
 				// read line by line
 				sql = null;
@@ -466,16 +469,16 @@ public class system {
 					System.out.printf("array size == %d\n", stringarray.length);
 						
 					
-					sql =  "INSERT INTO orders VALUES "
+					sql =  "INSERT INTO book_author VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
 						System.out.printf("i == %d ", i);
 						if (i != 0) //Whether to add a comma
 							sql += ", ";
-						if (StrOrIntorders[i] == 1) // Is a String
+						if (StrOrIntbook_author[i] == 1) // Is a String
 							sql += "'" + stringarray[i] + "'";
-						if (StrOrIntorders[i] == 0) // Is a Int
+						if (StrOrIntbook_author[i] == 0) // Is a Int
 						    sql += stringarray[i];
 					}
 					sql += ")";
@@ -495,6 +498,7 @@ public class system {
 					
 				}
 				reader.close();
+				
 				
 			}
 				
