@@ -151,7 +151,7 @@ public class Bookstore {
 				try {
 					String psql = "SELECT * FROM orders WHERE o_date LIKE ? ORDER BY order_id";
 					pstmt = con.prepareStatement(psql);
-					pstmt.setString(1, "'"+ monthofquery+"-__'");
+					pstmt.setString(1, "'"+monthofquery+"-__'");
 					rs3 = pstmt.executeQuery();
 					
 				} catch (SQLException e) {
@@ -200,7 +200,7 @@ public class Bookstore {
 
 				//***SQL Query
 				
-				System.out.printf("You input %s",input);
+				System.out.printf("You input is %s\n",input);
 				
 				/*
 				try {
@@ -252,9 +252,9 @@ public class Bookstore {
 				PreparedStatement pstmt = null;
 				
 				try {
-					String psql = "SELECT sum, ISBN "
-							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)nest "
-							+ "ORDER BY sum DESC "
+					String psql = "SELECT a.sum, a.ISBN "
+							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)a "
+							+ "ORDER BY a.sum DESC "
 							+ "LIMIT ? ";
 					pstmt = con.prepareStatement(psql);
 					pstmt.setString(1, input);
