@@ -281,7 +281,7 @@ public class system {
 					System.out.printf("array size == %d\n", stringarray.length);
 						
 					
-					sql =  "INSERT INTO book VALUES "
+					sql =  "INSERT INTO book_author VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
@@ -335,7 +335,7 @@ public class system {
 					System.out.printf("array size == %d\n", stringarray.length);
 						
 					
-					sql =  "INSERT INTO book VALUES "
+					sql =  "INSERT INTO customer VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
@@ -390,7 +390,7 @@ public class system {
 					System.out.printf("array size == %d\n", stringarray.length);
 						
 					
-					sql =  "INSERT INTO book VALUES "
+					sql =  "INSERT INTO ordering VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
@@ -444,7 +444,7 @@ public class system {
 					System.out.printf("array size == %d\n", stringarray.length);
 						
 					
-					sql =  "INSERT INTO book VALUES "
+					sql =  "INSERT INTO orders VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
 					{
