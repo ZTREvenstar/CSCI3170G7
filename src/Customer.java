@@ -255,7 +255,7 @@ public class Customer {
 							//get the latest the order_id first
 							String psq2 = "SELECT O.order_id "
 							    		+ "FROM orders O "
-							    		+ "ORDER BY O.oreder_id DESC "
+							    		+ "ORDER BY O.order_id DESC "
 							    		+ "LIMIT 1 ";
 							pstmt = conObj.prepareStatement(psq2);
 							rs = pstmt.executeQuery();
