@@ -63,7 +63,7 @@ public class system {
 			System.out.println(e);
 			System.exit(0);
 		}	
-		System.out.print("Database connection SUCCESS!!!!");
+		//System.out.print("Database connection SUCCESS!!!!");
 		system mySystemObj = new system();
 		
 		while (true)

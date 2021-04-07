@@ -59,6 +59,9 @@ public class Bookstore {
 			System.exit(0);
 		}	
 		//System.out.print("Database connection SUCCESS!!!!\n\n");
+
+		//System.out.print("Database connection SUCCESS!!!!");
+
 		
 		
 		Bookstore myBookstoreObj = new Bookstore();

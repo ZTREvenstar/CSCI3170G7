@@ -185,11 +185,10 @@ public class Customer {
 		System.out.println(">> Input ISBN and then the quantity.");
 		System.out.println(">> You can press \"L\" to see ordered list, or \"F\" to finish ordering.");
 
+		System.out.print(firstOrder);
+		System.out.println("========");
 		while(true)
-		{
-			System.out.print(firstOrder);
-			System.out.println("========");
-			
+		{		
 			String book_ISBN = null;
 			int book_quantity = 0;
 			
@@ -225,7 +224,20 @@ public class Customer {
 			}
 			else
 			{	
-				// assume that ISBN input always exist.
+				// check if the ISBN input exist.
+				boolean ISBN_Valid = false;
+				String asql = "SELECT B.ISBN FROM book B WHERE B.ISBN = ?";
+				pstmt = conObj.prepareStatement(asql);
+				pstmt.setString(1, book_ISBN);
+				rs = pstmt.executeQuery();
+				while (rs.next())
+					ISBN_Valid = true;
+				
+				if (ISBN_Valid == false)
+				{
+					System.out.println("ISBN not found. Please input again:");
+					continue;
+				}
 				
 				System.out.printf("Please enter the quantity of the order: ");
 				while (true)
@@ -457,7 +469,7 @@ public class Customer {
 			int unit_price = -1;
 			
 			while (rs.next()) {	
-				no_of_copies_available = rs.getInt("no_of_copies_available");
+				no_of_copies_available = rs.getInt("no_of_copies");
 				unit_price = rs.getInt("unit_price");
 			}
 			
@@ -490,17 +502,19 @@ public class Customer {
 			}
 			bookQuantity.set(bookNum - 1, updated_quantity);
 			
+			String temp2 = bookList.get(bookNum - 1); 
+			
 			// perform updating table "book", "ordering" and "orders"
-			psql = "UPDATE book B " 
-				 + "SET B.no_of_copies = ? "
-				 + "WHERE B.ISBN = ?";
+			psql = "UPDATE book B SET B.no_of_copies = ? WHERE B.ISBN = ?";
+			pstmt = conObj.prepareStatement(psql);
 			pstmt.setInt(1, no_of_copies_available);
-			pstmt.setString(2, bookList.get(bookNum - 1));
+			pstmt.setString(2, temp2);
 			pstmt.executeUpdate(); 
 			
 			psql = "UPDATE ordering OL " 
 				 + "SET OL.quantity = ? "
 				 + "WHERE OL.order_id = ? AND OL.ISBN = ?";
+			pstmt = conObj.prepareStatement(psql);
 			pstmt.setInt(1, updated_quantity);
 			pstmt.setString(2, orderID);
 			pstmt.setString(3, bookList.get(bookNum - 1));
@@ -514,6 +528,7 @@ public class Customer {
 				psql += "SET O.charge = O.charge - ?, O.o_date = ? ";
 			}
 			psql += "WHERE O.order_id = ?";
+			pstmt = conObj.prepareStatement(psql);
 			pstmt.setInt(1, alterNum * unit_price);
 			pstmt.setString(2, mainHandler.systemdate);
 			pstmt.setString(3, orderID);
@@ -610,7 +625,7 @@ public class Customer {
 			System.out.println(e);
 			System.exit(0);
 		}	
-		System.out.print("Database connection SUCCESS!!!!");
+		//System.out.print("Database connection SUCCESS!!!!");
 		
 		
 		Customer myCustomerObj = new Customer();
@@ -633,7 +648,7 @@ public class Customer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.printf("You have finished Book Search!    Status: %d\n\n", status);
+				System.out.println("You have finished Book Search!    \n");
 			}
 			
 			// Order Creation 
@@ -648,7 +663,7 @@ public class Customer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.printf("You have finished Order Creation!    Status: %d\n\n", status);
+				System.out.println("You have finished Order Creation!    \n");
 			}	
 			
 			// Order Altering
@@ -663,7 +678,7 @@ public class Customer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.printf("You have finished altering order!    Status: %d\n\n", status);			
+				System.out.println("You have finished altering order!    \n");			
 			}
 			
 			// Order Query
@@ -678,7 +693,7 @@ public class Customer {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.printf("You have finished Order Query!    Status: %d\n\n", status);
+				System.out.println("You have finished Order Query!    \n");
 			}
 			
 		}

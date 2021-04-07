@@ -5,14 +5,6 @@ public class mainHandler
 {
 	public static String systemdate = "0000-00-00";
 	
-	public void showSystemDate()
-	{
-		//
-		//
-		//
-		//......
-	}
-	
 	// This method is responsible for displaying text interface, 
 	// receiving user choices and returning user choices
 	public int mainInterfaceHandler() throws IOException
@@ -72,7 +64,7 @@ public class mainHandler
 			//Display system date
 			if (choice == 4)
 			{
-				
+				System.out.println("The system date is " + systemdate);
 			}
 			
 		}
