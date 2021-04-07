@@ -474,10 +474,7 @@ public class system {
 				sb.append(input).insert(7,"-");
 				input=sb.toString();
 				
-				String sql = "SELECT *"
-						+ "FROM orders"
-						+ "ORDER BY o_date DESC"
-						+ "LIMIT 1";
+				String sql = "SELECT * FROM orders ORDER BY o_date DESC LIMIT 1";
 				
 				PreparedStatement pstmt = null;
 				String odate = null;
