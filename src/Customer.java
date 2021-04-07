@@ -366,10 +366,18 @@ public class Customer {
 		pstmt.setString(1, orderID);		
 		rs = pstmt.executeQuery();
 		
-		String order_id = rs.getString("order_id");
-		int charge = rs.getInt("charge");
-		String shipping_status = rs.getString("shipping_status");
-		String customerID = rs.getString("customer_id");
+		String order_id = null;
+		int charge = 0;
+		String shipping_status = null;
+		String customerID = null;
+		
+		while(rs.next()) {
+			order_id = rs.getString("order_id");
+			charge = rs.getInt("charge");
+			shipping_status = rs.getString("shipping_status");
+			customerID = rs.getString("customer_id");
+		}
+		
 		
 		System.out.print("OrderID: " + order_id + "   ");
 		System.out.print("customerID: " + customerID + "   ");
