@@ -181,7 +181,7 @@ public class system {
 					e.printStackTrace();
 				}
 				
-				psql = "DROP TABLE IF EXISTS ordering";
+				psql = "DROP TABLE IF EXISTS orders";
 				try {
 					pstmt = con.prepareStatement(psql);
 					int updatestatus = pstmt.executeUpdate();
