@@ -87,25 +87,7 @@ public class Bookstore {
 				
 				boolean idvalue= false ; 
 				
-				try {
-					String psq3 = "SELECT * FROM orders WHERE order_id=?";
-					pstmt = con.prepareStatement(psq3);
-					pstmt.setString(1, orderid);
-					rs3 = pstmt.executeQuery();
-					
-					while(rs3.next()) {
-						idvalue = true;
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 				
-				if(idvalue==false) {
-					System.out.println("Invalid input!");
-				}
-				
-				else {
 				ResultSet rs1=null, rs2 = null;
 				//PreparedStatement pstmt = null;
 				String status=null;
@@ -163,7 +145,7 @@ public class Bookstore {
 				else {
 				System.out.printf("Sorry, you cannot update. Reason1: the order_id doesn't exist. Reason2: the shipping status is Y or less than 1 book is ordered.\n\n");
 				}
-			}
+			
 			}
 			
 			// Order Query
