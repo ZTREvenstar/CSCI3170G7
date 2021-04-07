@@ -481,7 +481,10 @@ public class system {
 				try {
 					pstmt = con.prepareStatement(sql);
 					ResultSet rs = pstmt.executeQuery();
-					odate = rs.getString("o_date");
+					while(rs.next())
+					{
+						odate = rs.getString("o_date");
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
