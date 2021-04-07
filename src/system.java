@@ -472,8 +472,10 @@ public class system {
 				StringBuffer sb = new StringBuffer(); 
 				sb.append(input).insert(4,"-");
 				sb.append(input).insert(7,"-");
-				input=sb.toString();
-				
+				System.out.println(input);
+				System.out.println(sb.toString());
+				input = sb.toString();
+				System.out.println(input);
 				String sql = "SELECT * FROM orders ORDER BY o_date DESC LIMIT 1";
 				
 				PreparedStatement pstmt = null;
@@ -490,7 +492,7 @@ public class system {
 					e.printStackTrace();
 				}
 				
-				System.out.printf("Latest date in orders: %s", odate);
+				System.out.printf("Latest date in orders: %s\n", odate);
 				
 				String finaldate = null;
 				if(input.compareTo(odate) > 0)
