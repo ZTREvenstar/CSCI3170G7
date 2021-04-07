@@ -224,12 +224,35 @@ public class system {
 				txtList.add("ordering.txt");
 				txtList.add("book_author.txt");
 				
+				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+				String input = null;
+				System.out.println("Please enter the folder path");
+				input = reader.readLine();
+				String fn = input + "/" + txtList.get(0);
+				File file = new File(fn);
+				int success = 0;
+				for (int i = 0; i < 5; i++)
+				{
+					fn = input + "/" + txtList.get(i);
+					System.out.println(fn);
+					file = new File(fn);
+					if (!file.exists()) {
+				    System.out.println("Wrong path");
+				    break;
+				    } else 
+				    {
+					success++;
+					}
+					}
+				
+				if (success==5)
+				{
 				//1111111111111book
-				String fileName = txtList.get(0);
-				File file= new File(fileName);
+				String fileName = input + "/" + txtList.get(0);
+				file= new File(fileName);
 				
 				// prepare the buffer reader
-				BufferedReader reader= new BufferedReader(new FileReader(file));;
+				reader= new BufferedReader(new FileReader(file));;
 				
 				PreparedStatement pstmt = null;
 				
@@ -275,7 +298,7 @@ public class system {
 				
 				
 				//222222222customer
-				fileName = txtList.get(1);
+				fileName = input + "/" + txtList.get(1);
 				file= new File(fileName);
 				
 				// prepare the buffer reader
@@ -322,7 +345,7 @@ public class system {
 				
 				
 				//33333333orders
-				fileName = txtList.get(2);
+				fileName = input + "/" + txtList.get(2);
 				file= new File(fileName);
 				
 				// prepare the buffer reader
@@ -369,7 +392,7 @@ public class system {
 				
 				
 				//444444ordering
-				fileName = txtList.get(3);
+				fileName = input + "/" + txtList.get(3);
 				file= new File(fileName);
 				
 				// prepare the buffer reader
@@ -416,7 +439,7 @@ public class system {
 				
 				
 				//5555555555book_author
-				fileName = txtList.get(4);
+				fileName = input + "/" + txtList.get(4);
 				file= new File(fileName);
 				
 				// prepare the buffer reader
@@ -456,13 +479,13 @@ public class system {
 						{
 							e.printStackTrace();
 						}
-					}	
+					}
 					
 				}
 				reader.close();
-				
-				
-			}
+				System.out.println("Processing...Data is loaded!");
+				}
+				}
 				
 			// Set System Date
 			if (choice == 4)
@@ -503,6 +526,7 @@ public class system {
 				
 				System.out.println("Today is " + finaldate);
 				}
+			
 			}
 		
 	}
