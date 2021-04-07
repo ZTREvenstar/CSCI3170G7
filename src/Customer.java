@@ -524,9 +524,9 @@ public class Customer {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;	
 
-		String psql = "SELECT *"
-			    	+ "FROM orders O"
-			    	+ "WHERE O.customer_id = ? AND O.o_date LIKE ?"
+		String psql = "SELECT * "
+			    	+ "FROM orders O "
+			    	+ "WHERE O.customer_id = ? AND O.o_date LIKE ? "
 			    	+ "ORDER BY O.order_id";
 	
 		pstmt = conObj.prepareStatement(psql);
