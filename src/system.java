@@ -471,8 +471,8 @@ public class system {
 				input = reader.readLine();
 				StringBuffer sb = new StringBuffer(); 
 				sb.append(input).insert(4,"-");
-				sb.append(input).insert(7,"-");
-				System.out.println(input);
+				sb.insert(7,"-");
+ 				System.out.println(input);
 				System.out.println(sb.toString());
 				input = sb.toString();
 				System.out.println(input);
