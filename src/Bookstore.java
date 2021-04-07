@@ -58,7 +58,7 @@ public class Bookstore {
 			System.out.println(e);
 			System.exit(0);
 		}	
-		System.out.print("Database connection SUCCESS!!!!");
+		//System.out.print("Database connection SUCCESS!!!!\n\n");
 		
 		
 		Bookstore myBookstoreObj = new Bookstore();
@@ -79,8 +79,32 @@ public class Bookstore {
 				System.out.printf("Please input the order ID:");
 				orderid = reader.readLine();
 				
-				ResultSet rs1=null, rs2 = null;
+				ResultSet rs3=null;
 				PreparedStatement pstmt = null;
+				
+				boolean idvalue= true ; 
+				
+				try {
+					String psq3 = "SELECT * FROM orders WHERE order_id=?";
+					pstmt = con.prepareStatement(psq3);
+					pstmt.setString(1, orderid);
+					rs3 = pstmt.executeQuery();
+					
+					while(rs3.next()) {
+						idvalue = false;
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if(idvalue==false) {
+					System.out.println("Invalid input!");
+				}
+				
+				else {
+				ResultSet rs1=null, rs2 = null;
+				//PreparedStatement pstmt = null;
 				String status=null;
 				int quantity=0, updateStatus1=0;
 				
@@ -136,6 +160,7 @@ public class Bookstore {
 				else {
 				System.out.printf("Sorry, you cannot update. Reason1: the order_id doesn't exist. Reason2: the shipping status is Y or less than 1 book is ordered.\n\n");
 				}
+			}
 			}
 			
 			// Order Query
@@ -203,7 +228,7 @@ public class Bookstore {
 				int numinput = Integer.parseInt(input);
 				
 				if(numinput<=0) {
-					System.out.printf("Invalid input!");
+					System.out.printf("Invalid input!\n");
 				}
 				else {
 				
