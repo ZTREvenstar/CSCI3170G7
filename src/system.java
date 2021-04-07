@@ -479,10 +479,17 @@ public class system {
 						+ "ORDER BY o_date DESC"
 						+ "LIMIT 1";
 				
-				PreparedStatement pstmt = con.prepareStatement(sql);
-				ResultSet rs = pstmt.executeQuery();
+				PreparedStatement pstmt = null;
+				String odate = null;
+				try {
+					pstmt = con.prepareStatement(sql);
+					ResultSet rs = pstmt.executeQuery();
+					odate = rs.getString("o_date");
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
-				String odate = rs.getString("o_date");
 				System.out.printf("Latest date in orders: %s", odate);
 				
 				String finaldate = null;
