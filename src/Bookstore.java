@@ -186,9 +186,9 @@ public class Bookstore {
 				}
 				
 				if (counter!=0) 
-					System.out.printf("Total charges of the month is %d\n", chargetotal);
+					System.out.printf("Total charges of the month is %d\n\n", chargetotal);
 				else 
-					System.out.printf("No record is found\n");
+					System.out.printf("No record is found\n\n");
 	
 				
 			}	
@@ -253,9 +253,9 @@ public class Bookstore {
 				PreparedStatement pstmt = null;
 				
 				try {
-					String psql = "SELECT a.sum, a.ISBN "
-							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)a "
-							+ "ORDER BY a.sum DESC "
+					String psql = "SELECT sum, ISBN "
+							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN) "
+							+ "ORDER BY sum DESC "
 							+ "LIMIT ? ";
 					pstmt = con.prepareStatement(psql);
 					pstmt.setString(1, input);
