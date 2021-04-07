@@ -85,7 +85,7 @@ public class Bookstore {
 				ResultSet rs3=null;
 				PreparedStatement pstmt = null;
 				
-				boolean idvalue= true ; 
+				boolean idvalue= false ; 
 				
 				try {
 					String psq3 = "SELECT * FROM orders WHERE order_id=?";
@@ -94,7 +94,7 @@ public class Bookstore {
 					rs3 = pstmt.executeQuery();
 					
 					while(rs3.next()) {
-						idvalue = false;
+						idvalue = true;
 					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
