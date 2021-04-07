@@ -472,10 +472,8 @@ public class system {
 				StringBuffer sb = new StringBuffer(); 
 				sb.append(input).insert(4,"-");
 				sb.insert(7,"-");
- 				System.out.println(input);
-				System.out.println(sb.toString());
 				input = sb.toString();
-				System.out.println(input);
+				
 				String sql = "SELECT * FROM orders ORDER BY o_date DESC LIMIT 1";
 				
 				PreparedStatement pstmt = null;
@@ -500,9 +498,8 @@ public class system {
 				else
 					finaldate = odate;
 				
-				System.out.println("Today is " + finaldate);   
-			}
-			
+				System.out.println("Today is " + finaldate);
+				}
 			}
 		
 	}
