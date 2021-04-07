@@ -172,6 +172,7 @@ public class Customer {
 	{
 		int status = 0;
 		boolean firstOrder = true;
+		String neworderid = null;
 		
 		//Prepare the reader which reads user inputs from the console
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));		
@@ -222,8 +223,7 @@ public class Customer {
 			}
 			else
 			{	
-				// check if the ISBN input exists
-				//String psql = "";
+				// assume that ISBN input always exist.
 				
 				System.out.printf("Please enter the quantity of the order");
 				while (true)
@@ -239,19 +239,7 @@ public class Customer {
 					rs = pstmt.executeQuery();
 					int no_of_copies_available = rs.getInt("no_of_copies");
 					int book_unit_price = rs.getInt("book_unit_price");
-					
-					//get the latest the order_id
-					String psq2 = "SELECT O.order_id "
-					    		+ "FROM orders O "
-					    		+ "ORDER BY O.oreder_id DESC "
-					    		+ "LIMIT 1 ";
-					pstmt = conObj.prepareStatement(psq2);
-					rs = pstmt.executeQuery();
-					String lastestorderid = rs.getString("order_id");
-					int numneworderid = Integer.parseInt(lastestorderid)+1;
-					String neworderid = String.format("%08d", numneworderid);
-
-									
+											
 					// quantity ordered not available
 					if (no_of_copies_available < book_quantity)
 						System.out.printf("Quantity requested exceeds the maximum number available!\n"
@@ -261,32 +249,44 @@ public class Customer {
 						// if it's the first order, perform insert, else perform update
 						if (firstOrder)
 						{
+							//get the latest the order_id first
+							String psq2 = "SELECT O.order_id "
+							    		+ "FROM orders O "
+							    		+ "ORDER BY O.oreder_id DESC "
+							    		+ "LIMIT 1 ";
+							pstmt = conObj.prepareStatement(psq2);
+							rs = pstmt.executeQuery();
+							String lastestorderid = rs.getString("order_id");
+							int numneworderid = Integer.parseInt(lastestorderid)+1;
+							neworderid = String.format("%08d", numneworderid);
+							
 							psql = "INSERT INTO orders VALUES (?, ?, 'N', ?, ?)";
 							pstmt = conObj.prepareStatement(psql);
 							pstmt.setString(1, neworderid);
-							//change needed
 							pstmt.setString(2, system.systemDate);
-							//
 							pstmt.setInt(3, book_quantity * book_unit_price);
 							pstmt.setString(4, customerID);
 						}
-						//!!!!!!!!!!!!!
 						else
 						{
-							psql = "UPDATE orders O"
-								 + " SET O.o_date = '1984-00-00', O.charge = O.charge + ?"
-								 + " WHERE O.order_id = '000000000'";
+							psql = "UPDATE orders O "
+								 + " SET O.o_date = ?, O.charge = O.charge + ? "
+								 + " WHERE O.order_id = ?";
 							pstmt = conObj.prepareStatement(psql);
-							pstmt.setInt(1, book_quantity * book_unit_price);
+							pstmt.setString(1, system.systemDate);
+							pstmt.setInt(2, book_quantity * book_unit_price);
+							pstmt.setString(3, neworderid);
 						}
 						int updateStatus1 = pstmt.executeUpdate();					
 						
+						// add book
 						// check whether the book has been in the ordering list
 						psql = "SELECT OL.ISBN "
 							 + "FROM ordering OL "
-							 + "WHERE OL.order_id = 000000000 AND OL.ISBN = ?";
+							 + "WHERE OL.order_id = ? AND OL.ISBN = ?";
 						pstmt = conObj.prepareStatement(psql);
-						pstmt.setString(1, book_ISBN);
+						pstmt.setString(1, neworderid);
+						pstmt.setString(2, book_ISBN);
 						boolean bookHasBeenOrdered = false;
 						while(pstmt.executeQuery().next())
 							bookHasBeenOrdered = true;
@@ -294,19 +294,21 @@ public class Customer {
 						// if the book has been ordered before, perform update, else perform insert
 						if (bookHasBeenOrdered == false)
 						{
-							psql = "INSERT INTO ordering VALUES ('000000000', ?, ?)";
+							psql = "INSERT INTO ordering VALUES (?, ?, ?)";
 							pstmt = conObj.prepareStatement(psql);
-							pstmt.setString(1, book_ISBN);
-							pstmt.setInt(2, book_quantity);
+							pstmt.setString(1, neworderid);
+							pstmt.setString(2, book_ISBN);
+							pstmt.setInt(3, book_quantity);
 						}
 						else
 						{
 							psql = "UPDATE ordering OL "
 								 + "SET OL.quantity = OL.quantity + ? "
-								 + "WHERE OL.order_id = 000000000 AND OL.ISBN = ?";
+								 + "WHERE OL.order_id = ? AND OL.ISBN = ?";
 							pstmt = conObj.prepareStatement(psql);
 							pstmt.setInt(1, book_quantity);
-							pstmt.setString(2, book_ISBN);
+							pstmt.setString(2, neworderid);
+							pstmt.setString(3, book_ISBN);
 						}
 						int updateStatus2 = pstmt.executeUpdate();
 						
@@ -349,8 +351,8 @@ public class Customer {
 		
 		
 		// display order info
-		String psql = "SELECT *"
-			    + "FROM orders O"
+		String psql = "SELECT * "
+			    + "FROM orders O "
 			    + "WHERE O.order_id = ?";
 		pstmt = conObj.prepareStatement(psql);
 		pstmt.setString(1, orderID);		
@@ -368,8 +370,8 @@ public class Customer {
 				
 		
 		// display the book list
-		psql = "SELECT OL.ISBN, OL.quantity"
-			 + "FROM orders OL"
+		psql = "SELECT OL.ISBN, OL.quantity "
+			 + "FROM orders OL "
 			 + "WHERE OL.order_id = ?";
 		pstmt = conObj.prepareStatement(psql);
 		pstmt.setString(1, orderID);
@@ -415,15 +417,15 @@ public class Customer {
 			System.out.println("input the number:");
 			int alterNum = reader.read();	
 					
-			psql = "SELECT B.no_of_copies, B.unit_price"
-				 + "FROM book B"
+			psql = "SELECT B.no_of_copies, B.unit_price "
+				 + "FROM book B "
 				 + "WHERE B.ISBN = ?";
 			pstmt = conObj.prepareStatement(psql);
 			pstmt.setString(1, bookList.get(bookNum - 1));
 			rs = pstmt.executeQuery();
 			
-			int no_of_copies_available = 0;
-			int unit_price = 0;
+			int no_of_copies_available = -1;
+			int unit_price = -1;
 			
 			while (rs.next()) {	
 				no_of_copies_available = rs.getInt("no_of_copies_available");
@@ -460,49 +462,34 @@ public class Customer {
 			bookQuantity.set(bookNum - 1, updated_quantity);
 			
 			// perform updating table "book", "ordering" and "orders"
-			psql = "UPDATE book B" 
-				 + "SET B.no_of_copies = ?"
+			psql = "UPDATE book B " 
+				 + "SET B.no_of_copies = ? "
 				 + "WHERE B.ISBN = ?";
 			pstmt.setInt(1, no_of_copies_available);
 			pstmt.setString(2, bookList.get(bookNum - 1));
 			pstmt.executeUpdate(); 
 			
-			psql = "UPDATE ordering OL" 
-				 + "SET OL.quantity = ?"
+			psql = "UPDATE ordering OL " 
+				 + "SET OL.quantity = ? "
 				 + "WHERE OL.order_id = ? AND OL.ISBN = ?";
 			pstmt.setInt(1, updated_quantity);
 			pstmt.setString(2, orderID);
 			pstmt.setString(3, bookList.get(bookNum - 1));
 			pstmt.executeUpdate(); 
 					
-			psql = "UPDATE orders O" 
-				 + "SET O.charge = O.charge ? ?"
+			psql = "UPDATE orders O " 
+				 + "SET O.charge = O.charge ? ?, O.o_date = ?"
 				 + "WHERE O.order_id = ?";
 			if (addOrRemove.equals("add"))
 				pstmt.setString(1, "+");
 			if (addOrRemove.equals("remove"))
 				pstmt.setString(1, "-");
 			pstmt.setInt(2, alterNum * unit_price);
-			pstmt.setString(3, orderID);
+			pstmt.setString(3, system.systemDate);
+			pstmt.setString(4, orderID);
 			pstmt.executeUpdate(); 
 			
-			System.out.println("The update is done!");
-			
-			// perform update order date
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
-			//
+			System.out.println("The update is done!");.
 			
 			// print order info and book list again
 			System.out.print("OrderID: " + order_id + "   ");
