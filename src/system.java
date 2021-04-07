@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class system {
+	
 	public static String dbAddress = "jdbc:mysql://projgw.cse.cuhk.edu.hk:2633/db7";
 	public static String dbUsername = "Group7";
 	public static String dbPassword = "Group7";
+	
 	public int systemInterfaceHandler() throws IOException
 	{
 		String OutputString = "";
@@ -150,60 +152,70 @@ public class system {
 				{
 					e.printStackTrace();
 				}
+			}
 			
 			// Insert Data
 			if (choice == 3) 
 			{
-				PreparedStatement stmt = null;
+				// String array stores all txt 
+				ArrayList<String> txtList = new ArrayList<String>();
+				txtList.add("book.txt");
+				txtList.add("book_author.txt");
+				txtList.add("orders.txt");
+				txtList.add("ordering.txt");
+				txtList.add("customer.txt");
 				
-				String fileName = "book.txt";
+				String fileName = txtList.get(1);
 				File file= new File(fileName);
 				
-				String tempString= null;
-				BufferedReader reader= null;
+				// prepare the buffer reader
+				BufferedReader reader= new BufferedReader(new FileReader(file));;
 				
-				try{
-					System.out.println("read file line by line");
-					reader= new BufferedReader(new FileReader(file));
-					
-					while ((tempString = reader.readLine()) != null) 
+				PreparedStatement pstmt = null;
+				
+				// 1 represents the corresponding attribute is type String, 0 represents Int
+				int StrOrInt[] = {1, 1, 0, 0};
+				String tempString= null;
+				
+				// read line by line
+				String sql = null;
+				boolean txtNotNULL = false;
+				while ((tempString = reader.readLine()) != null) // a while loop read one txt
+				{
+					txtNotNULL = true;
+					sql = null;
+					String stringarray[] = tempString.split("|");			
+					sql =  "INSERT INTO book VALUES "
+						 + "(";
+					for (int i = 0; i < stringarray.length; i++)
 					{
-						String sql= ("insert into book values (tempString)");
-						try{
-							con=DriverManager.getConnection(dbAddress, dbUsername, dbPassword);
-							con.setAutoCommit(false);
-							stmt= con.prepareStatement("load data local infile '' " + "into table loadtest fields terminated by ','");
-							StringBuilder sb= new StringBuilder();
-							InputStream is= new ByteArrayInputStream(sb.toString().getBytes());
-							((com.mysql.jdbc.Statement) stmt).setLocalInfileInputStream(is);
-							stmt.executeUpdate(sql);
-							con.commit();
-							}
-						catch(SQLException e) 
+						if (i != 0) //Whether to add a comma
+							sql += ", ";
+						if (StrOrInt[i] == 1) // Is a String
+							sql += "'" + stringarray[i] + "'";
+						if (StrOrInt[i] == 0) // Is a Int
+						    sql += stringarray[i];
+					}
+					sql += ")";
+					
+					System.out.println("=====! sql");
+					
+					if (txtNotNULL)
+					{
+						try {
+							pstmt = con.prepareStatement(sql);
+							int updatestatus = pstmt.executeUpdate();
+						} catch (SQLException e) 
 						{
 							e.printStackTrace();
 						}
-						;}
-					reader.close();
+					}	
+					
 				}
-				catch(IOException e) 
-				{
-					e.printStackTrace();
-				}
-				finally{
-					if (reader != null) {
-						try{
-							reader.close();
-							}
-						catch(IOException e1) {
-							
-						}
-					}
-				}
+				reader.close();
 				
 			}
 				
-			
 			// Set System Date
 			if (choice == 4)
 			{
@@ -211,8 +223,6 @@ public class system {
 			}
 			
 			}
-		
-		}
 		
 	}
 }

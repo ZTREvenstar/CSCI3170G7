@@ -1,5 +1,5 @@
-1-1234-5678-9 UGFH 130 8
-2-2345-6789-0 C++Programming 90 15
-4-4567-8901-2 GreReading 270 2
-3-3456-7890-1 How_to_master_Database? 120 28
-3-3333-2222-1 UGFN 140 1
+1-1234-1234-1|Database I|100|50
+2-2345-2345-2|Database II|110|40
+3-3456-3456-3|Operating System|130|20
+4-4567-4567-4|Programming in C language|140|10
+5-5678-5678-5|Programming in Java language|150|5
