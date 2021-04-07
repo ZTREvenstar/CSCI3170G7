@@ -182,7 +182,11 @@ public class Bookstore {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				System.out.printf("Total charges of the month is %d\n", chargetotal);
+				
+				if (counter!=0) 
+					System.out.printf("Total charges of the month is %d\n", chargetotal);
+				else 
+					System.out.printf("No record is found\n");
 				
 			}	
 			
