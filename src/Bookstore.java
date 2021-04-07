@@ -200,8 +200,8 @@ public class Bookstore {
 				String input = reader.readLine();
 
 				//***SQL Query
-				
-				System.out.printf("You input is %s\n",input);
+				int numinput = Integer.parseInt(input);
+				System.out.printf("You input is %d\n",numinput);
 				
 				/*
 				try {
@@ -253,12 +253,12 @@ public class Bookstore {
 				PreparedStatement pstmt = null;
 				
 				try {
-					String psql = "SELECT sum, ISBN "
-							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN) "
-							+ "ORDER BY sum DESC "
+					String psql = "SELECT a.sum, a.ISBN "
+							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)a "
+							+ "ORDER BY a.sum DESC "
 							+ "LIMIT ? ";
 					pstmt = con.prepareStatement(psql);
-					pstmt.setString(1, input);
+					pstmt.setInt(1, numinput);
 					rs4 = pstmt.executeQuery();
 							
 				} catch (SQLException e) {
@@ -290,12 +290,12 @@ public class Bookstore {
 				PreparedStatement pstmt1 = null;
 				
 				try {
-					String psq2 = "SELECT b.ISBN, b.title, a.sum "
-								+ "FROM book b, (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)a "
-								+ "WHERE a.sum>=? AND a.ISBN=b.ISBN ";
+					String psq2 = "SELECT b.ISBN, b.title, c.sum "
+								+ "FROM book b, (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)c "
+								+ "WHERE c.sum>=? AND c.ISBN=b.ISBN ";
 					pstmt1 = con.prepareStatement(psq2);
-					pstmt1.setString(1, input);
-					rs5 = pstmt.executeQuery();
+					pstmt1.setInt(1, smallsum);
+					rs5 = pstmt1.executeQuery();
 							
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
