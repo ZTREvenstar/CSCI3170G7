@@ -3,6 +3,8 @@ import java.io.*;
 
 public class mainHandler
 {
+	public static String systemdate;
+	
 	public void showSystemDate()
 	{
 		//

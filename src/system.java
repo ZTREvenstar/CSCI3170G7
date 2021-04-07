@@ -13,8 +13,6 @@ public class system {
 	public static String dbUsername = "Group7";
 	public static String dbPassword = "Group7";
 	
-	public static String systemDate;
-	
 	public int systemInterfaceHandler() throws IOException
 	{
 		String OutputString = "";
@@ -521,7 +519,7 @@ public class system {
 				else
 					finaldate = odate;
 				
-				systemDate = finaldate;
+				mainHandler.systemdate = finaldate;
 				
 				System.out.println("Today is " + finaldate);
 				}

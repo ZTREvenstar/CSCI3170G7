@@ -187,6 +187,9 @@ public class Customer {
 
 		while(true)
 		{
+			System.out.print(firstOrder);
+			System.out.println("========");
+			
 			String book_ISBN = null;
 			int book_quantity = 0;
 			
@@ -204,10 +207,13 @@ public class Customer {
 				// see ordered list
 				String psql = "SELECT OL.ISBN, OL.quantity "
 						    + "FROM orders O, ordering OL "
-						    + "WHERE O.customer_id = ? AND O.order_id = OL.order_id";
-				
+						    + "WHERE O.order_id = ? AND O.order_id = OL.order_id";
+				//
+				//
+				//
+				//
 				pstmt = conObj.prepareStatement(psql);
-				pstmt.setString(1, customerID);
+				pstmt.setString(1, neworderid);
 				
 				rs = pstmt.executeQuery();
 				
@@ -251,7 +257,8 @@ public class Customer {
 					{ 
 						// if it's the first order, perform insert, else perform update
 						if (firstOrder)
-						{
+						{	
+							firstOrder = false;
 							//get the latest the order_id first
 							String psq2 = "SELECT O.order_id "
 							    		+ "FROM orders O "
@@ -271,7 +278,7 @@ public class Customer {
 							psql = "INSERT INTO orders VALUES (?, ?, 'N', ?, ?)";
 							pstmt = conObj.prepareStatement(psql);
 							pstmt.setString(1, neworderid);
-							pstmt.setString(2, system.systemDate);
+							pstmt.setString(2, mainHandler.systemdate);
 							pstmt.setInt(3, book_quantity * book_unit_price);
 							pstmt.setString(4, customerID);
 						}
@@ -281,7 +288,7 @@ public class Customer {
 								 + " SET O.o_date = ?, O.charge = O.charge + ? "
 								 + " WHERE O.order_id = ?";
 							pstmt = conObj.prepareStatement(psql);
-							pstmt.setString(1, system.systemDate);
+							pstmt.setString(1, mainHandler.systemdate);
 							pstmt.setInt(2, book_quantity * book_unit_price);
 							pstmt.setString(3, neworderid);
 						}
@@ -302,6 +309,7 @@ public class Customer {
 						// if the book has been ordered before, perform update, else perform insert
 						if (bookHasBeenOrdered == false)
 						{
+							//firstOrder = false;
 							psql = "INSERT INTO ordering VALUES (?, ?, ?)";
 							pstmt = conObj.prepareStatement(psql);
 							pstmt.setString(1, neworderid);
@@ -494,14 +502,14 @@ public class Customer {
 			pstmt.executeUpdate(); 
 					
 			psql = "UPDATE orders O " 
-				 + "SET O.charge = O.charge ? ?, O.o_date = ?"
+				 + "SET O.charge = O.charge ? ?, O.o_date = ? "
 				 + "WHERE O.order_id = ?";
 			if (addOrRemove.equals("add"))
 				pstmt.setString(1, "+");
 			if (addOrRemove.equals("remove"))
 				pstmt.setString(1, "-");
 			pstmt.setInt(2, alterNum * unit_price);
-			pstmt.setString(3, system.systemDate);
+			pstmt.setString(3, mainHandler.systemdate);
 			pstmt.setString(4, orderID);
 			pstmt.executeUpdate(); 
 			
