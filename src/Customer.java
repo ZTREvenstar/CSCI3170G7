@@ -141,7 +141,7 @@ public class Customer {
 				int unit_price = rs.getInt("unit_price");
 				int no_of_copies = rs.getInt("no_of_copies");
 				System.out.printf("======= %d-th record:\n", counter);
-				System.out.println("      ISBN: " + ISBN + "   "
+				System.out.println("ISBN: " + ISBN + "   "
 						         + "Book title: " + title + "   "
 						         + "Unit price: " + unit_price + "   "
 						         + "No of available: " + no_of_copies + "   ");
@@ -208,10 +208,6 @@ public class Customer {
 				String psql = "SELECT OL.ISBN, OL.quantity "
 						    + "FROM orders O, ordering OL "
 						    + "WHERE O.order_id = ? AND O.order_id = OL.order_id";
-				//
-				//
-				//
-				//
 				pstmt = conObj.prepareStatement(psql);
 				pstmt.setString(1, neworderid);
 				
@@ -296,8 +292,6 @@ public class Customer {
 						
 						pstmt.close();
 						
-						System.out.println("Update table Order SUCCESS!");///////////
-						
 						// add book
 						// check whether the book has been in the ordering list
 						psql = "SELECT OL.ISBN "
@@ -311,7 +305,7 @@ public class Customer {
 						while(rs.next())
 							bookHasBeenOrdered = true;
 						
-						System.out.println("CHECK BOOK EXIST FINISHED");///////////
+						//System.out.println("CHECK BOOK EXIST FINISHED");///////////
 						
 						// if the book has been ordered before, perform update, else perform insert
 						if (bookHasBeenOrdered == false)
@@ -323,7 +317,7 @@ public class Customer {
 							pstmt.setString(2, book_ISBN);
 							pstmt.setInt(3, book_quantity);
 							
-							System.out.println("11111111111111111111111111");
+							//System.out.println("11111111111111111111111111");
 						}
 						else
 						{
@@ -335,7 +329,7 @@ public class Customer {
 							pstmt.setString(2, neworderid);
 							pstmt.setString(3, book_ISBN);
 							
-							System.out.println("2222222222222222222222222222");
+							//System.out.println("2222222222222222222222222222");
 						}
 						int updateStatus2 = pstmt.executeUpdate();
 						
@@ -435,7 +429,7 @@ public class Customer {
 		
 		// shipping status = "N", continue.
 		System.out.println("Which book you want to alter (input book no.):");
-		int bookNum = reader.read();
+		int bookNum = Integer.parseInt(reader.readLine());
 		
 		String addOrRemove = null;
 		while(true)
@@ -450,7 +444,7 @@ public class Customer {
 		while (true)
 		{
 			System.out.println("input the number:");
-			int alterNum = reader.read();	
+			int alterNum = Integer.parseInt(reader.readLine());	
 					
 			psql = "SELECT B.no_of_copies, B.unit_price "
 				 + "FROM book B "
@@ -587,7 +581,10 @@ public class Customer {
 			System.out.println("OrderDate: " + o_date);
 			System.out.printf("charge: %d\n", charge);
 			System.out.println("shipping status: " + shipping_status);
-		}			
+		}		
+		if (counter == 0)
+			System.out.println("No records found.");
+		
 		status = 1;
 		
 		return status;
