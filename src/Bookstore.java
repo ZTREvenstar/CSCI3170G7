@@ -134,7 +134,7 @@ public class Bookstore {
 					}
 				}
 				else {
-				System.out.printf("Sorry, you cannot update the order because the shipping status is not N or less than 1 book is ordered.\n");
+				System.out.printf("Sorry, you cannot update. Reason1: the order_id doesn't exist. Reason2: the shipping status is Y or less than 1 book is ordered.\n\n");
 				}
 			}
 			
@@ -199,56 +199,15 @@ public class Bookstore {
 				System.out.printf("Please input the N popular books number:");
 				String input = reader.readLine();
 
-				//***SQL Query
+				
 				int numinput = Integer.parseInt(input);
-				System.out.printf("You input is %d\n",numinput);
 				
-				/*
-				try {
-					String psql = "SELECT sum, ISBN,"
-							+ "RANK() OVER ( "
-							+ "		ORDER BY sum DESC, ISBN"
-							+ "	) as rank"
-							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)nest "
-							+ "WHERE rank<=?";
-					pstmt = con.prepareStatement(psql);
-					pstmt.setString(1, input);
-					rs4 = pstmt.executeQuery();
-							
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}	
-				
-				//output the result
-				System.out.printf("ISBN           Title           Copies\n");
-				
-				try {
-					while(rs4.next())
-					{
-						String quantitysum = rs4.getString("sum(quantity)");
-						String ISBN=rs4.getString("ISBN");
-						
-						ResultSet rs5=null;
-						PreparedStatement pstmt1 = null;
-						
-						String psq2="SELECT b.title FROM book b WHERE b.ISBN=?";
-						pstmt1 = con.prepareStatement(psq2);
-						pstmt1.setString(1, ISBN);
-						rs5 = pstmt1.executeQuery();
-						String title=null;
-						while(rs5.next()) {
-							title=rs4.getString("title");
-						}
-						System.out.printf("%s     %s     %s\n", ISBN,title,quantitysum );
-						
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if(numinput<=0) {
+					System.out.printf("Invalid input!");
 				}
-				*/
+				else {
 				
+				//***SQL Query
 				ResultSet rs4=null;
 				PreparedStatement pstmt = null;
 				
@@ -284,7 +243,7 @@ public class Bookstore {
 				}
 				
 				//output the result
-				System.out.printf("ISBN           Title           Copies\n");
+				System.out.printf("ISBN              Title                Copies\n");
 				
 				ResultSet rs5=null;
 				PreparedStatement pstmt1 = null;
@@ -292,7 +251,8 @@ public class Bookstore {
 				try {
 					String psq2 = "SELECT b.ISBN, b.title, c.sum "
 								+ "FROM book b, (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)c "
-								+ "WHERE c.sum>=? AND c.ISBN=b.ISBN ";
+								+ "WHERE c.sum>=? AND c.ISBN=b.ISBN "
+								+ "ORDER BY c.sum DESC, b.title, b.ISBN";
 					pstmt1 = con.prepareStatement(psq2);
 					pstmt1.setInt(1, smallsum);
 					rs5 = pstmt1.executeQuery();
@@ -315,7 +275,7 @@ public class Bookstore {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+				}
 			}
 			
 		}
