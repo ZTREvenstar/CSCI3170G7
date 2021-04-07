@@ -127,8 +127,6 @@ public class Bookstore {
 							e.printStackTrace();
 						}
 						
-						//for debug, delete later
-						System.out.printf("updateStatus1: %d\n", updateStatus1);
 						System.out.printf("Updated shipping status\n\n");
 					}
 					else{ 
@@ -151,9 +149,9 @@ public class Bookstore {
 				
 				//***SQL Query
 				try {
-					String psql = "SELECT * FROM orders WHERE o_date LIKE '?' ORDER BY order_id";
+					String psql = "SELECT * FROM orders WHERE o_date LIKE ? ORDER BY order_id";
 					pstmt = con.prepareStatement(psql);
-					pstmt.setString(1, monthofquery+"-__");
+					pstmt.setString(1, "'"+ monthofquery+"-__'");
 					rs3 = pstmt.executeQuery();
 					
 				} catch (SQLException e) {
