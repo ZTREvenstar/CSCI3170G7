@@ -234,7 +234,6 @@ public class system {
 				for (int i = 0; i < 5; i++)
 				{
 					fn = input + "/" + txtList.get(i);
-					System.out.println(fn);
 					file = new File(fn);
 					if (!file.exists()) {
 				    System.out.println("Wrong path");
