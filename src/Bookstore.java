@@ -97,8 +97,12 @@ public class Bookstore {
 					pstmt.setString(1, orderid);
 					rs2 = pstmt.executeQuery();
 					
-					status = rs1.getString("shipping_status");
-					quantity = rs2.getInt("quantity");
+					while(rs1.next()) {
+						status = rs1.getString("shipping_status");
+					}
+					while(rs2.next()) {
+						quantity = rs2.getInt("quantity");
+					}
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -202,11 +206,12 @@ public class Bookstore {
 				PreparedStatement pstmt = null;
 				
 				System.out.printf("You input %s",input);
+				
 				try {
-					String psql = "SELECT *,"
+					String psql = "SELECT sum, ISBN,"
 							+ "RANK() OVER ( "
 							+ "		ORDER BY sum DESC, ISBN"
-							+ "	) rank"
+							+ "	) as rank"
 							+ "FROM (SELECT sum(quantity) as sum,ISBN FROM ordering GROUP BY ISBN)nest "
 							+ "WHERE rank<=?";
 					pstmt = con.prepareStatement(psql);
@@ -245,12 +250,9 @@ public class Bookstore {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+			
 			}
 			
 		}
-			
 	}
-
-
 }
