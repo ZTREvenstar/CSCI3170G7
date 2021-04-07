@@ -3,7 +3,7 @@ import java.io.*;
 
 public class mainHandler
 {
-	public static String systemdate;
+	public static String systemdate = "0000-00-00";
 	
 	public void showSystemDate()
 	{
@@ -18,7 +18,7 @@ public class mainHandler
 	public int mainInterfaceHandler() throws IOException
 	{		
 		String OutputString = "";
-		OutputString += "The System Date is now: 0000-00-00\n";
+		OutputString += "The System Date is now: " + systemdate + "\n";
 		OutputString += "<This is the Book Ordering System.>\n";
 		OutputString += "---------------------------------------\n";
 		OutputString += "1. System interface.\n";

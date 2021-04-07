@@ -518,10 +518,10 @@ public class system {
 					finaldate = input;
 				else
 					finaldate = odate;
+				if(mainHandler.systemdate.compareTo(finaldate) < 0)
+					mainHandler.systemdate = finaldate;
 				
-				mainHandler.systemdate = finaldate;
-				
-				System.out.println("Today is " + finaldate);
+				System.out.println("Today is " + mainHandler.systemdate);
 				}
 			
 			}
