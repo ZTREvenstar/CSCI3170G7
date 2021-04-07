@@ -228,8 +228,8 @@ public class Customer {
 				System.out.printf("Please enter the quantity of the order: ");
 				while (true)
 				{
-					book_quantity = reader.read();
-				
+					book_quantity = Integer.parseInt(reader.readLine());
+					System.out.println(book_quantity);
 					// check if the quantity are available
 					String psql = "SELECT B.no_of_copies, B.unit_price "
 						    	+ "FROM book B "
@@ -322,7 +322,7 @@ public class Customer {
 						
 						// update num_of_copies_available
 						psql = "UPDATE book B "
-							 + "SET B.no_of_copies = B.no_of_copies - ?"
+							 + "SET B.no_of_copies = B.no_of_copies - ? "
 							 + "WHERE B.ISBN = ?";
 						pstmt = conObj.prepareStatement(psql);
 						pstmt.setInt(1, book_quantity);
