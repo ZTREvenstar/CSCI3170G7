@@ -5,7 +5,7 @@ Yuan Chenjie 1155124316
 
 #How to compile our project?
 1st step: Please put all four .java files into a folder on your Linux machine.
-2nd step: Please put all the database file into the a sub folder of the folder above. 
+2nd step: Please put all the database file into the a subfolder of the folder above. 
 	For example, if .java files are inside "src", please build a new folder inside "src" called "data", and put all the database file inside "data".
 3rd step: Run "javac -d . mainHandler.java system.java Bookstore.java Customer.java" to compile the project.
 
