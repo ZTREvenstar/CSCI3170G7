@@ -264,7 +264,18 @@ public class system {
 				{
 					txtNotNULL = true;
 					sql = null;
-					String stringarray[] = tempString.split("\\|");	
+					String stringarray[] = tempString.split("\\|");
+					
+					//avoid ' problem
+					for (int c = 0; c < stringarray.length; c++)
+					{
+					int index=stringarray[c].indexOf("'");
+						if (index!=-1) {
+							StringBuffer a = new StringBuffer();
+							a.append(stringarray[c]).insert(index,"'");
+							stringarray[c] = a.toString();
+						}
+					}
 					
 					sql =  "INSERT INTO book VALUES "
 						 + "(";
@@ -313,6 +324,17 @@ public class system {
 					sql = null;
 					String stringarray[] = tempString.split("\\|");		
 					
+					//avoid ' problem
+					for (int c = 0; c < stringarray.length; c++)
+					{
+					int index=stringarray[c].indexOf("'");
+						if (index!=-1) {
+							StringBuffer a = new StringBuffer();
+							a.append(stringarray[c]).insert(index,"'");
+							stringarray[c] = a.toString();
+						}
+					}
+					
 					sql =  "INSERT INTO customer VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
@@ -359,6 +381,17 @@ public class system {
 					txtNotNULL = true;
 					sql = null;
 					String stringarray[] = tempString.split("\\|");	
+					
+					//avoid ' problem
+					for (int c = 0; c < stringarray.length; c++)
+					{
+					int index=stringarray[c].indexOf("'");
+						if (index!=-1) {
+							StringBuffer a = new StringBuffer();
+							a.append(stringarray[c]).insert(index,"'");
+							stringarray[c] = a.toString();
+						}
+					}
 					
 					sql =  "INSERT INTO orders VALUES "
 						 + "(";
@@ -407,6 +440,18 @@ public class system {
 					sql = null;
 					String stringarray[] = tempString.split("\\|");		
 					
+					//avoid ' problem
+					for (int c = 0; c < stringarray.length; c++)
+					{
+					int index=stringarray[c].indexOf("'");
+						if (index!=-1) {
+							StringBuffer a = new StringBuffer();
+							a.append(stringarray[c]).insert(index,"'");
+							stringarray[c] = a.toString();
+						}
+					}
+					
+					
 					sql =  "INSERT INTO ordering VALUES "
 						 + "(";
 					for (int i = 0; i < stringarray.length; i++)
@@ -453,6 +498,18 @@ public class system {
 					txtNotNULL = true;
 					sql = null;
 					String stringarray[] = tempString.split("\\|");	
+					
+					//avoid ' problem
+					for (int c = 0; c < stringarray.length; c++)
+					{
+					int index=stringarray[c].indexOf("'");
+						if (index!=-1) {
+							StringBuffer a = new StringBuffer();
+							a.append(stringarray[c]).insert(index,"'");
+							stringarray[c] = a.toString();
+						}
+					}
+					
 					
 					sql =  "INSERT INTO book_author VALUES "
 						 + "(";
