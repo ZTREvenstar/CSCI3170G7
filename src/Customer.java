@@ -185,8 +185,8 @@ public class Customer {
 		System.out.println(">> Input ISBN and then the quantity.");
 		System.out.println(">> You can press \"L\" to see ordered list, or \"F\" to finish ordering.");
 
-		System.out.print(firstOrder);
-		System.out.println("========");
+		//System.out.print(firstOrder);
+		//System.out.println("========");
 		while(true)
 		{		
 			String book_ISBN = null;
@@ -243,7 +243,7 @@ public class Customer {
 				while (true)
 				{
 					book_quantity = Integer.parseInt(reader.readLine());
-					System.out.println(book_quantity);
+					//System.out.println(book_quantity);
 					// check if the quantity are available
 					String psql = "SELECT B.no_of_copies, B.unit_price "
 						    	+ "FROM book B "
@@ -258,9 +258,9 @@ public class Customer {
 						book_unit_price = rs.getInt("unit_price");
 					}
 					// quantity ordered not available
-					if (no_of_copies_available < book_quantity)
-						System.out.printf("Quantity requested exceeds the maximum number available!\n"
-										+ "Please input a number <= %d.\n", no_of_copies_available);
+					if (no_of_copies_available < book_quantity || book_quantity < 0)
+						System.out.printf("Error! Quantity requested either exceeds the maximum number available or invalid\n"
+										+ "Please input a number > 0 and <= %d.\n", no_of_copies_available);
 					else
 					{ 
 						// if it's the first order, perform insert, else perform update
@@ -355,8 +355,8 @@ public class Customer {
 						int updateStatus3 = pstmt.executeUpdate();
 						
 						
-						System.out.printf("updateStatus1: %d      updateStatus2: %d      "
-								        + "updateStatus3: %d\n", updateStatus1, updateStatus2, updateStatus3);
+						//System.out.printf("updateStatus1: %d      updateStatus2: %d      "
+						//		        + "updateStatus3: %d\n", updateStatus1, updateStatus2, updateStatus3);
 						break;
 					}
 				}
