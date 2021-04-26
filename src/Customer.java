@@ -243,7 +243,11 @@ public class Customer {
 				while (true)
 				{
 					book_quantity = Integer.parseInt(reader.readLine());
-					//System.out.println(book_quantity);
+					
+					// we define that negative quantity means quitting
+					if (book_quantity < 0)
+						break;
+					
 					// check if the quantity are available
 					String psql = "SELECT B.no_of_copies, B.unit_price "
 						    	+ "FROM book B "
@@ -258,9 +262,9 @@ public class Customer {
 						book_unit_price = rs.getInt("unit_price");
 					}
 					// quantity ordered not available
-					if (no_of_copies_available < book_quantity || book_quantity < 0)
-						System.out.printf("Error! Quantity requested either exceeds the maximum number available or invalid\n"
-										+ "Please input a number > 0 and <= %d.\n", no_of_copies_available);
+					if (no_of_copies_available < book_quantity)
+						System.out.printf("Quantity requested exceeds the maximum number available!\n"
+										+ "Please input a number >= 0 and <= %d.\n", no_of_copies_available);
 					else
 					{ 
 						// if it's the first order, perform insert, else perform update
